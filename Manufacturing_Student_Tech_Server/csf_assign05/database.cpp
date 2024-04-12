@@ -9,7 +9,10 @@ Database::Database(const std::string &filename)
   // Completed: initialize the mutex
   pthread_mutex_init(&lock, NULL);
 
-  admins.insert(std::pair<ulong, User*>(6010675004172191, new User(6010675004172191)));
+  User* ronald = new User(6010675004172191);
+
+  admins.insert(std::pair<ulong, User*>(6010675004172191, ronald));
+  students.insert(std::pair<ulong, User*>(6010675004172191, ronald));
 }
 
 Database::~Database() {
