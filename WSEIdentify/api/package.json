@@ -1,14 +1,25 @@
 {
-	"name": "mock-gatekeeper",
-	"version": "1.0.0",
-	"description": "Mock API for posts app",
-	"scripts": {
-		"start": "npx json-server@0.17.4 db.json"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"dependencies": {
-		"json-server": "0.17.4"
-	}
+  "name": "gatekeeper-api",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/db/migrate.ts",
+    "db:studio": "drizzle-kit studio",
+    "db:push": "drizzle-kit push",
+    "db:seed": "tsx src/db/seed.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.12.0",
+    "@hono/zod-validator": "^0.2.2",
+    "better-sqlite3": "^11.1.2",
+    "drizzle-orm": "^0.31.2",
+    "hono": "^4.4.12",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^20.11.17",
+    "drizzle-kit": "^0.22.8",
+    "tsx": "^4.7.1"
+  }
 }

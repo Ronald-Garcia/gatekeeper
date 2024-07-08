@@ -1,4 +1,5 @@
 
+import { UserType } from "@/data/types";
 import { atom } from "nanostores";
 
 export const PAGES = { 
@@ -31,4 +32,22 @@ export const setUserJID = (newID: string) => {
 
 export const getUserJID = () => {
     return $userJID.get();
+}
+
+export const $currentUser = atom<UserType>({
+        id: -1,
+        jid: 0,
+        name: "",
+        banned: false,
+        machinePerm: 0,
+        admin: false,
+    }
+);
+
+export const setUser = (newUser: UserType) => {
+    $currentUser.set(newUser);
+}
+
+export const getUser = () => {
+    return $currentUser.get();
 }

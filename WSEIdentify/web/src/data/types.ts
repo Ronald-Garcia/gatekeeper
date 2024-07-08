@@ -1,6 +1,7 @@
 export interface UserType {
-    id: number,
-    name: string,
+    jid: number,
+    firstname: string,
+    lastname: string,
     banned: boolean,
     machinePerm: number,
     admin: boolean,

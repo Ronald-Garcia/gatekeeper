@@ -8,23 +8,45 @@ import {
     DialogTrigger
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { setUserJID } from "@/lib/store";
+import { $userJID, setUserJID } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
-
-
+import { useStore } from "@nanostores/react";
+import { getUserByJID } from "@/data/api"; 
+import { setUser } from "@/lib/store";
+import { useToast } from "./ui/use-toast";
 const SwipeDialog = () => {
 
+    const { toast } = useToast();
+
+    const userJID = useStore($userJID);
+    
     const closeButton = useRef(null);
     const handleKeyboard = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUserJID((e.target as HTMLInputElement).value);
+    }
+
+    const submitJHID = async () => {
+        try {
+            const user = await getUserByJID(userJID);
+            if (!user) {
+                throw new Error("Error! User not found!");
+            }
+            setUser(user);    
+        } catch (err) {
+            toast({
+                variant: "destructive",
+                description: (err as Error).message,
+                title: "Uh oh! Something went wrong! 😔"
+            })
+        }
     }
 
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <Button
-                    variant="outline" 
+                    variant="outline"
                     className="w-[50%] h-[50%] border-4 border-stone-400"
                 >
                     <p className="text-5xl text-wrap font-bold text-stone-700">
@@ -55,7 +77,8 @@ const SwipeDialog = () => {
                 <DialogFooter>
                     <DialogClose asChild>
                         <Button
-                            ref={closeButton}>
+                            ref={closeButton}
+                            onClick={submitJHID}>
                             Submit
                         </Button>
                     </DialogClose>
