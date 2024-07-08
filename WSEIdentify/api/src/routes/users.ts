@@ -8,6 +8,8 @@ const userRoutes = new Hono();
 
 userRoutes.get("/users", async (c) => {
   try {
+    c.header("Access-Control-Allow-Origin", "*");
+
     const allUsers = await db.select().from(users);
     return c.json(allUsers);  
   } catch (err) {
@@ -19,6 +21,8 @@ userRoutes.get("/users", async (c) => {
 userRoutes.get("/users/:jid", 
   zValidator("param", getUserByJIDSchema),
   async (c) => {
+    c.header("Access-Control-Allow-Origin", "*");
+
   try {
     const { jid } = c.req.valid("param");
     const [ user ] = await db.select().from(users).where(eq(users.jid, jid)); 
@@ -30,13 +34,13 @@ userRoutes.get("/users/:jid",
   } catch (err) {
     return c.json({message: "Unexpected error"}, 500);
   }
-
 });
 
 userRoutes.delete("/users/:id", 
     
     zValidator("param", getUserByJIDSchema),
     async (c) => {
+      c.header("Access-Control-Allow-Origin", "*");
 
   try {
     const { jid } = c.req.valid("param");
@@ -56,6 +60,7 @@ userRoutes.post("/users",
   
   zValidator("json", createUserSchema),
   async (c) => {
+    c.header("Access-Control-Allow-Origin", "*");
     try {
       const body = c.req.valid("json"); 
       //                   ORDER  MATTERS!
@@ -65,6 +70,7 @@ userRoutes.post("/users",
     } catch (err) {
       return c.json({message: "Unexpected error"}, 500);
     }
+  
 });
 
 userRoutes.patch("/users/:jid",
@@ -72,18 +78,46 @@ userRoutes.patch("/users/:jid",
   zValidator("json", updateUserSchema),
   async (c) => {
 
+    c.header("Access-Control-Allow-Origin", "*");
+
   try {
     const { jid } = c.req.valid("param"); 
     const body = c.req.valid("json");
     // UPDATE posts SET content = :content WHERE id = :id
     const [ updatedUser ] = await db.update(users).set(body).where(eq(users.jid, jid)).returning();
     if (!updatedUser) {
-      return c.json({ error: "Post not found" }, 404);
+      return c.json({ error: "User not found" }, 404);
     }
     return c.json(updatedUser);
   } catch (err) {
     return c.json({message: "Unexpected error"}, 500);
   }
 });
+
+userRoutes.patch("/users/:jid/budget",
+  zValidator("param", getUserByJIDSchema),
+  async (c) => {
+
+    c.header("Access-Control-Allow-Origin", "*");
+
+    try {
+      const { jid } = c.req.valid("param");
+
+      const { budgetCodes } = await c.req.json();
+
+      const [ updatedUser ] = await db.update(users).set({
+        budgetCodes
+      }).where(eq(users.jid, jid)).returning();
+
+      if (!updatedUser) {
+        return c.json({ error: "User not found" }, 404);
+      }
+
+      return c.json(updatedUser);
+      
+    } catch (err) {
+      return c.json({message: "Unexpected error"}, 500);
+    }
+  });
 
 export default userRoutes;

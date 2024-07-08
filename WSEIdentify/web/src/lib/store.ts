@@ -4,8 +4,9 @@ import { atom } from "nanostores";
 
 export const PAGES = { 
     START: 0,
-    SWIPE: 1,
-    OTHER: 2
+    IP: 1,
+    BUDGET: 2,
+
 }
 
 
@@ -13,10 +14,6 @@ export const $currentPage = atom<number>(PAGES.START);
 
 export const setCurrentPage = (newPage: number) => {
     $currentPage.set(newPage);
-}
-
-export const getCurrentPage = () => {
-    return $currentPage.get();
 }
 
 export const $userJID = atom<number>(0);
@@ -30,17 +27,14 @@ export const setUserJID = (newID: string) => {
     }
 }
 
-export const getUserJID = () => {
-    return $userJID.get();
-}
-
 export const $currentUser = atom<UserType>({
-        id: -1,
         jid: 0,
-        name: "",
+        firstname: "",
+        lastname: "",
         banned: false,
         machinePerm: 0,
         admin: false,
+        budgetCodes: {},
     }
 );
 
@@ -48,6 +42,8 @@ export const setUser = (newUser: UserType) => {
     $currentUser.set(newUser);
 }
 
-export const getUser = () => {
-    return $currentUser.get();
+export const $budgetCodeUsed = atom<string>("");
+
+export const setBudgetCodeUsed = (newBudgetCodeUsed: string) => {
+    $budgetCodeUsed.set(newBudgetCodeUsed);
 }

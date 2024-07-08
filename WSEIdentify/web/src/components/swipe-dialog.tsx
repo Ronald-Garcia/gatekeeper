@@ -8,7 +8,7 @@ import {
     DialogTrigger
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { $userJID, setUserJID } from "@/lib/store";
+import { $userJID, PAGES, setCurrentPage, setUserJID } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 import { useStore } from "@nanostores/react";
@@ -32,7 +32,8 @@ const SwipeDialog = () => {
             if (!user) {
                 throw new Error("Error! User not found!");
             }
-            setUser(user);    
+            setUser(user);   
+            setCurrentPage(PAGES.BUDGET);
         } catch (err) {
             toast({
                 variant: "destructive",

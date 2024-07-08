@@ -15,6 +15,13 @@
       "when": 1720443631515,
       "tag": "0001_petite_cobalt_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1720448851273,
+      "tag": "0002_great_ravenous",
+      "breakpoints": true
     }
   ]
 }

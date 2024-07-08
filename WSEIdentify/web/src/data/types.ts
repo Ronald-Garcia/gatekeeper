@@ -5,4 +5,5 @@ export interface UserType {
     banned: boolean,
     machinePerm: number,
     admin: boolean,
+    budgetCodes: object
 }

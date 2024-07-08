@@ -13,12 +13,22 @@ async function seed() {
   const [user1] = await db
     .insert(users)
     .values({
-      jid: 4747487874,
+      jid: 6010675004172191,
       firstname: "Ronald",
       lastname: "Garcia",
       machinePerms: 0xb011,
       banned: 0,
-      admin: 1
+      admin: 1,
+      budgetCodes: {
+        0: {
+              0: "Lab 1",
+              1: "2837787484"
+        },
+        1: {
+              0: "Lab 2",
+              1: "SENIOR DESIGN"
+        }
+      }
     })
     .returning({ id: users.jid });
 
@@ -42,7 +52,17 @@ async function seed() {
         lastname: "Macy",
         machinePerms: 0xb111,
         banned: 0,
-        admin: 1
+        admin: 1,
+        budgetCodes: {
+          0: {
+                0: "Lab 1",
+                1: "2837787484"
+          },
+          1: {
+                0: "Lab 2",
+                1: "SENIOR DESIGN"
+          }
+        }
     })
     .returning({ id: users.jid });
 
