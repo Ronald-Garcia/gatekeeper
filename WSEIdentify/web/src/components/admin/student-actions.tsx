@@ -35,7 +35,6 @@ const StudentActons = () => {
                             </Button>
                         </li>
                         <li>
-
                             <UpdateStudentSwipeDialog>
                             </UpdateStudentSwipeDialog>
                         </li>
@@ -49,12 +48,6 @@ const StudentActons = () => {
                                 </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                            <DropdownMenuItem onClick={goToAddStudent}>
-                                Add a Student Account
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <UpdateStudentSwipeDialog></UpdateStudentSwipeDialog>
-                            </DropdownMenuItem>
                             <DropdownMenuItem>
                                 Delete a Student Account
                             </DropdownMenuItem>

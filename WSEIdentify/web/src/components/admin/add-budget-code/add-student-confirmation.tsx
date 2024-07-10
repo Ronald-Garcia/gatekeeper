@@ -1,20 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { updateUserToDB } from "@/data/api";
-import { $newUser, invalidNewUser } from "@/lib/store";
+import { addBudgetToDB } from "@/data/api";
+import { $newBudget, invalidNewBudget } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 
 
-const UpdateStudentConfirmation = () => {
+const AddBudgetConfirmation = () => {
 
     const { toast } = useToast();
 
-    const newUser = useStore($newUser);
+    const newBudget = useStore($newBudget);
 
     const onSubmitClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         try {
-            if (invalidNewUser()) {
+            if (invalidNewBudget()) {
                 e.preventDefault();
                 throw new Error("Not enough information provided! Please double check required fields.");
             }
@@ -29,10 +29,10 @@ const UpdateStudentConfirmation = () => {
 
     const onYesClick = async () => {
         try {
-            await updateUserToDB(newUser);
+            await addBudgetToDB(newBudget);
             toast({
                 variant: "default",
-                description: `${newUser.firstname} was successfully updated.`,
+                description: `Budget was successfully added.`,
                 title: "Success! ✅"
             })
         } catch (err) {
@@ -59,7 +59,7 @@ const UpdateStudentConfirmation = () => {
                         Are you sure?
                     </DialogTitle>
                     <DialogDescription>
-                        Are you sure you want to update {newUser.firstname} {newUser.lastname}'s account?
+                        Are you sure you want to add this budget to the system?
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="flex flex-row space-x-3">
@@ -68,17 +68,17 @@ const UpdateStudentConfirmation = () => {
                             Wait...
                         </Button>
                     </DialogClose>
-                    <DialogClose>
-                        <Button
-                        onClick={onYesClick}>
-                            Yes!
-                        </Button>
-                    </DialogClose>
+                        <DialogClose asChild>
+                            <Button
+                            onClick={onYesClick}>
+                                Yes!
+                            </Button>
 
+                        </DialogClose>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     );
 }
 
-export default UpdateStudentConfirmation;
+export default AddBudgetConfirmation;

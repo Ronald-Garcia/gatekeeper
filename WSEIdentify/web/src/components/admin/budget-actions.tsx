@@ -1,3 +1,4 @@
+import { PAGES, setCurrentPage } from "@/lib/store";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
@@ -5,6 +6,10 @@ import { Separator } from "../ui/separator";
 
 const BudgetActions = () => {
 
+
+    const goToAddBudget = () => {
+        setCurrentPage(PAGES.ADMIN_ADD_BUDGET);
+    }
     return (
         <>
             <Card>
@@ -24,7 +29,8 @@ const BudgetActions = () => {
                     <ul>
                         <li>  
                             <Button
-                            variant="link">
+                            variant="link"
+                            onClick={goToAddBudget}>
                                 Add a Budget Code
                             </Button>
                         </li>
@@ -43,12 +49,6 @@ const BudgetActions = () => {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                            <DropdownMenuItem>
-                                Add a Budget Code
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                Remove a Budget Code
-                            </DropdownMenuItem>
                             <DropdownMenuItem>
                                 Update a Budget Code
                             </DropdownMenuItem>

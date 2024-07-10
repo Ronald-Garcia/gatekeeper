@@ -62,17 +62,19 @@ const AddStudentConfirmation = () => {
                         Are you sure you want to add {newUser.firstname} {newUser.lastname} to the system?
                     </DialogDescription>
                 </DialogHeader>
-                <DialogFooter >
-                    <DialogClose className="flex flex-row space-x-3">
+                <DialogFooter className="flex flex-row space-x-3">
+                    <DialogClose asChild>
                         <Button variant="secondary">
                             Wait...
                         </Button>
-                        <Button
-                        onClick={onYesClick}>
-                            Yes!
-                        </Button>
                     </DialogClose>
+                        <DialogClose asChild>
+                            <Button
+                            onClick={onYesClick}>
+                                Yes!
+                            </Button>
 
+                        </DialogClose>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

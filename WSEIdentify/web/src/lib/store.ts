@@ -9,6 +9,7 @@ export const PAGES = {
     ADMIN_START: 3,
     ADMIN_ADD_STUDENT: 4,
     ADMIN_UPDATE_STUDENT: 5,
+    ADMIN_ADD_BUDGET: 6
 }
 
 
@@ -91,7 +92,8 @@ export const setNewUserBudgetCodes = (budgetCodes: BudgetType[]) => {
 }
 
 export const toggleNewUserBudgetCodes = (budgetCode: BudgetType) => {
-    if ($newUser.get().budgetCodes.includes(budgetCode)) {
+    const userBudget = $newUser.get().budgetCodes.find(b => b.id === budgetCode.id);
+    if (userBudget) {
         $newUser.get().budgetCodes = $newUser.get().budgetCodes.filter(c => c.id !== budgetCode.id);
     } else {
         $newUser.get().budgetCodes.push(budgetCode);
@@ -112,4 +114,44 @@ export const invalidNewUser = () => {
 
 export const setNewUser = (user: UserType) => {
     $newUser.set(user);
+}
+
+export const $newBudget = atom<BudgetType>({
+    id: -1,
+    alias: "",
+    isSeniorDesign: 0,
+    isLab: 0,
+    isClass: 0
+});
+
+export const setNewBudgetId = (newId: string) => {
+    try {
+        const actualID = parseInt(newId);
+        $newBudget.get().id = actualID;
+    } catch (err) {
+        throw new Error("Invalid budget ID! Please type a number.");
+    }
+}
+export const setNewBudgetAlias = (alias: string) => {
+    $newBudget.get().alias = alias;
+}
+export const switchToNewBudgetLabel = (label: string) => {
+    const newBudget = $newBudget.get();
+
+    newBudget.isClass = label === "class" ? 1 : 0;
+    newBudget.isSeniorDesign = label === "SD" ? 1 : 0;
+    newBudget.isLab = label === "lab" ? 1 : 0;
+}
+
+export const setNewBudget = (budget: BudgetType) => {
+    $newBudget.set(budget);
+}
+
+export const invalidNewBudget = () => {
+    const newBudget = $newBudget.get();
+    const noAliasChosen = (newBudget.alias === "")
+    const noIDChosen = (newBudget.id === -1);
+    const noTypeChosen = !(newBudget.isClass || newBudget.isLab || newBudget.isSeniorDesign);
+
+    return noAliasChosen || noIDChosen || noTypeChosen;
 }

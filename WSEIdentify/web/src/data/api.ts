@@ -20,7 +20,7 @@ export const getUserByJID = async (userID: number) => {
 }
 
 export const addUserToDB = async (newUser: UserType) => {
-    
+
     try {
         const result = await fetch(`${API_URL}/users`, {
             method: "POST",
@@ -41,6 +41,28 @@ export const addUserToDB = async (newUser: UserType) => {
         throw err;
     }
 
+}
+
+export const updateUserToDB = async (user: UserType) => {
+    try {
+        const result = await fetch(`${API_URL}/users/${user.jid}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(user)
+        });
+        
+
+        if (result.status === 500) {
+            throw new Error("Something unexpected happened. Please notify an admin and try again later.");
+        }
+
+        const data = await result.json();
+        return data;
+    } catch (err) {
+        throw err;
+    }
 }
 
 export const getAllAvailableMachines = async () => {
@@ -74,3 +96,22 @@ export const getAllBudgetCodes = async () => {
     }
 }
 
+
+export const addBudgetToDB = async (budget: BudgetType) => {
+
+    try {
+        const result = await fetch(`${API_URL}/budgets`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(budget)    
+            }
+        );
+        const data: BudgetType = await result.json();
+        return data;
+    } catch (err) {
+        throw err;
+    }
+}

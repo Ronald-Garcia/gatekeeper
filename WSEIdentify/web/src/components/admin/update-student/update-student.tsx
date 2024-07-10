@@ -1,19 +1,16 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import UpdateStudentSwipeDialog from "./update-student-swipe-dialog";
 import { Input } from "../../ui/input";
 import { Checkbox } from "../../ui/checkbox";
 import { getAllAvailableMachines, getAllBudgetCodes } from "@/data/api";
 import { useToast } from "../../ui/use-toast";
 import { useState, useEffect } from "react";
 import { BudgetType, MachineType } from "@/data/types";
-import { ToggleGroup, ToggleGroupItem } from "../../ui/toggle-group";
 import { Separator } from "../../ui/separator";
 import { ChangeEvent } from "react";
-import { $newUser, PAGES, setCurrentPage, setNewUserAdmin, setNewUserFirstName, setNewUserLastName, setNewUserMachinePerms } from "@/lib/store";
+import { $newUser, PAGES, setCurrentPage, setNewUserAdmin, setNewUserFirstName, setNewUserLastName, setNewUserMachinePerms, toggleNewUserBudgetCodes } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "../../ui/button";
 import UpdateStudentConfirmation from "./update-student-confirmation";
-import AddStudentSwipeDialog from "../add-student/add-student-swipe-dialog";
 
 const UpdateStudent = () => {
 
@@ -155,19 +152,30 @@ const UpdateStudent = () => {
                             Click on the budget(s) to add them to the student's account.
                         </p>
                     </div>
-                    <ToggleGroup type="multiple">
-                        {allBudgets.map((budget)=> {
-                            return (
-                                <ToggleGroupItem 
+                    {allBudgets.map((budget)=> {
+                        const userBudget = newUser.budgetCodes.find(b => b.id === budget.id);
+                        return (
+                            <div key={`div for ${budget.id}`} className="flex items-center space-x-2">
+                                <Checkbox
                                     key={budget.alias} 
-                                    value={budget.alias}
-                                    defaultChecked={newUser.budgetCodes.includes(budget)}
+                                    id={`${budget.id}`}
+                                    defaultChecked={userBudget ? true : false}
+                                    className="transition-all"
+                                    onCheckedChange={() => {
+                                        toggleNewUserBudgetCodes(budget);
+                                    }}
                                     >
-                                    {budget.alias}
-                                </ToggleGroupItem>        
-                            );
-                        })}
-                    </ToggleGroup>
+                                </Checkbox>        
+                                <label
+                                    key={`label for ${budget.id}`}
+                                    htmlFor={`${budget.id}`}
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                        {budget.alias}
+                                </label>
+
+                            </div>
+                        );
+                    })}
 
                 </CardContent>
                 <CardFooter className="flex flex-row justify-end space-x-3">

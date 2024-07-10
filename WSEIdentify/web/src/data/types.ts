@@ -14,5 +14,8 @@ export interface MachineType {
 
 export interface BudgetType {
     id: number,
-    alias: string
+    alias: string,
+    isSeniorDesign: number,
+    isLab: number,
+    isClass: number
 }

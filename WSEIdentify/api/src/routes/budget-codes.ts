@@ -4,6 +4,7 @@ import { budgetCodes } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { cors } from "hono/cors";
+import { createBudgetSchema } from "../validators/schemas";
 const budgetRoutes = new Hono();
 
 budgetRoutes.get("/budgets", 
@@ -20,6 +21,16 @@ budgetRoutes.get("/budgets",
 
 budgetRoutes.get("/budgets/:code", async (c) => {
     
-})
+});
+
+budgetRoutes.post("/budgets", 
+  zValidator("json", createBudgetSchema),
+  cors(),
+  async (c) => {
+    const body = c.req.valid("json"); 
+    const [ newBudget ] = await db.insert(budgetCodes).values(body).returning();
+    return c.json(newBudget, 201);
+  }
+)
 
 export default budgetRoutes;

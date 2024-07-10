@@ -6,6 +6,7 @@ import InProgress from "./machine/in-progress";
 import AdminStart from "./admin/admin-start";
 import AddStudent from "./admin/add-student/add-student";
 import UpdateStudent from "./admin/update-student/update-student";
+import AddBudget from "./admin/add-budget-code/add-student";
 
 
 const Body = () => {
@@ -19,6 +20,7 @@ const Body = () => {
             {(curPage === PAGES.ADMIN_START) && <AdminStart></AdminStart>}
             {(curPage === PAGES.ADMIN_ADD_STUDENT) && <AddStudent></AddStudent>}
             {(curPage === PAGES.ADMIN_UPDATE_STUDENT) && <UpdateStudent></UpdateStudent>}
+            {(curPage === PAGES.ADMIN_ADD_BUDGET) && <AddBudget></AddBudget>}
         </div>
     );
 }

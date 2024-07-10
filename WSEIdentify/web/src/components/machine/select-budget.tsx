@@ -24,7 +24,7 @@ const SelectBudget = () => {
                     { currentUser.budgetCodes !== null && <ToggleGroup type="single">
                         {currentUser.budgetCodes.map((code) => {
                             return (
-                                <ToggleGroupItem key={"val" + code.id} value={"val" + code.id} variant="outline">  </ToggleGroupItem>
+                                <ToggleGroupItem key={"val" + code.id} value={"val" + code.id} variant="outline"> {code.alias} </ToggleGroupItem>
                             );
                         })}
                     </ToggleGroup>}

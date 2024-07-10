@@ -14,3 +14,13 @@ export const updateUserSchema = createUserSchema.partial();
 export const getUserByJIDSchema = z.object({
     jid: z.coerce.number().int().nonnegative(),
 })
+
+export const createBudgetSchema = z.object({
+    id: z.coerce.number().int().positive(),
+    alias: z.string().min(1, "Alias is required"),
+    isSeniorDesign: z.coerce.number().int().max(1).positive(),
+    isClass: z.coerce.number().int().positive().max(1),
+    isLab: z.coerce.number().int().positive().max(1),
+})
+
+export const updateBudgetSchema = createBudgetSchema.partial();
