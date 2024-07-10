@@ -1,9 +1,9 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { $currentUser, PAGES, setCurrentPage } from "@/lib/store";
 import { useStore } from "@nanostores/react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import StartSessionAlert from "./start-session-alert";
 const SelectBudget = () => {
 
@@ -21,12 +21,10 @@ const SelectBudget = () => {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    { currentUser.budgetCodes !== null && <ToggleGroup type="multiple">
-                        {Object.values(currentUser.budgetCodes).map((code) => {
-                            const namesAndAliases = Object.values(code);
-
+                    { currentUser.budgetCodes !== null && <ToggleGroup type="single">
+                        {currentUser.budgetCodes.map((code) => {
                             return (
-                                <ToggleGroupItem key={"val" + namesAndAliases[0]} value={"val" + namesAndAliases[0]} variant="outline"> {namesAndAliases.join(", ")} </ToggleGroupItem>
+                                <ToggleGroupItem key={"val" + code.id} value={"val" + code.id} variant="outline">  </ToggleGroupItem>
                             );
                         })}
                     </ToggleGroup>}

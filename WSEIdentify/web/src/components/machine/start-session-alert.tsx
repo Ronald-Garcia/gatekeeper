@@ -1,6 +1,6 @@
 import { PAGES, setCurrentPage } from "@/lib/store";
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
-import { Button } from "./ui/button";
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 type StartSessionAlertProps = {
     disabled: boolean

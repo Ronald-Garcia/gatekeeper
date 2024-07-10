@@ -1,11 +1,145 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "6d086cba-3553-4e0f-950c-3589a99c2e28",
+  "id": "ea99bac8-2ea3-4da8-9bfa-20201e4b95f9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "posts": {
-      "name": "posts",
+    "budgetCharges": {
+      "name": "budgetCharges",
+      "columns": {
+        "timeSpent": {
+          "name": "timeSpent",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "bCode": {
+          "name": "bCode",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "machine": {
+          "name": "machine",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "userJid": {
+          "name": "userJid",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "budgetCharges_bCode_budgetCodes_budgetCode_fk": {
+          "name": "budgetCharges_bCode_budgetCodes_budgetCode_fk",
+          "tableFrom": "budgetCharges",
+          "tableTo": "budgetCodes",
+          "columnsFrom": [
+            "bCode"
+          ],
+          "columnsTo": [
+            "budgetCode"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "budgetCharges_userJid_users_jid_fk": {
+          "name": "budgetCharges_userJid_users_jid_fk",
+          "tableFrom": "budgetCharges",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userJid"
+          ],
+          "columnsTo": [
+            "jid"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "budgetCodes": {
+      "name": "budgetCodes",
+      "columns": {
+        "budgetCode": {
+          "name": "budgetCode",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "alias": {
+          "name": "alias",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "isSeniorDesign": {
+          "name": "isSeniorDesign",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 0
+        },
+        "isLab": {
+          "name": "isLab",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 0
+        },
+        "isClass": {
+          "name": "isClass",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 1
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "machines": {
+      "name": "machines",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "hourly rate": {
+          "name": "hourly rate",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "users": {
+      "name": "users",
       "columns": {
         "jid": {
           "name": "jid",
@@ -37,6 +171,20 @@
         },
         "banned": {
           "name": "banned",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "budgetAliases": {
+          "name": "budgetAliases",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "admin": {
+          "name": "admin",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,

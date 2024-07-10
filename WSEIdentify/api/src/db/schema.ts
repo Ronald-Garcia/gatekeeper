@@ -4,22 +4,28 @@ export const users = sqliteTable("users", {
     jid: integer("jid").primaryKey(),
     firstname: text("first name").notNull(),
     lastname: text("last name").notNull(),
-    machinePerms: integer("machine permissions").notNull(),
+    machinePerm: integer("machine permissions").notNull(),
     banned: integer("banned").notNull(),
-    budgetCodes: text("budgetCodes", { mode: 'json' }).references(() => budgetCodes.names),
+    budgetCodes: text("budgetAliases", { mode: 'json' }),
     admin: integer("admin").notNull(),
 });
 
 export const budgetCharges = sqliteTable("budgetCharges", {
     timeSpent: integer("timeSpent").notNull(),
-    budgetCode: text("budgetCodes", { mode: 'json' }).references(() => budgetCodes.names),
+    budgetCode: integer("bCode").references(() => budgetCodes.id),
     machineUsed: integer("machine").notNull(),
     userJid: integer("userJid").references(() => users.jid),
 });
 
 export const budgetCodes = sqliteTable("budgetCodes", {
-    names: text("name(s)").primaryKey(),
+    id: integer("budgetCode").primaryKey(),
+    alias: text("alias"),
     isSeniorDesign: integer("isSeniorDesign").default(0),
     isLab: integer("isLab").default(0),
     isClass: integer("isClass").default(1)
 });
+
+export const machinesAvailable = sqliteTable("machines", {
+    name: text("name").primaryKey(),
+    rate: integer("hourly rate").notNull(),
+})

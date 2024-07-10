@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import Timer from "./timer";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { $budgetCodeUsed } from "@/lib/store";
 import { useStore } from "@nanostores/react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 
 const InProgress = () => {
 
@@ -23,8 +23,7 @@ const InProgress = () => {
     return (
         <>
             <Card>
-                <CardContent>
-                    <CardHeader>
+                <CardHeader>
                         <CardTitle>
                             Time spent
                         </CardTitle>
@@ -32,6 +31,7 @@ const InProgress = () => {
                             Below is the amount of time that will be billed to {budgetCode}.
                         </CardDescription>
                     </CardHeader>
+                <CardContent>
                     <p className="flex justify-center font-bold text-5xl">
                         <Timer time={time}></Timer>
                     </p>

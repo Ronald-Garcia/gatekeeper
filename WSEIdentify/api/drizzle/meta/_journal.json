@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1720443253972,
-      "tag": "0000_keen_turbo",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1720443631515,
-      "tag": "0001_petite_cobalt_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1720448851273,
-      "tag": "0002_great_ravenous",
+      "when": 1720541589272,
+      "tag": "0000_sweet_eternals",
       "breakpoints": true
     }
   ]

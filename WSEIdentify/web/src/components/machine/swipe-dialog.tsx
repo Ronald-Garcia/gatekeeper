@@ -14,7 +14,8 @@ import { useRef } from "react";
 import { useStore } from "@nanostores/react";
 import { getUserByJID } from "@/data/api"; 
 import { setUser } from "@/lib/store";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 const SwipeDialog = () => {
 
     const { toast } = useToast();
@@ -33,6 +34,20 @@ const SwipeDialog = () => {
                 throw new Error("Error! User not found!");
             }
             setUser(user);   
+            if (user.admin) {
+                toast({
+                    title: "Admin detected.",
+                    description: "Would you like to open the admin page?",
+                    action: (
+                        <ToastAction altText="Confirm" onClick={()=> {setCurrentPage(PAGES.ADMIN_START)}}>Yes!</ToastAction>
+                    )
+                })
+            }
+
+            const budgetsOfUser = Object.values(user.budgetCodes);
+            if (budgetsOfUser.length === 0) {
+                throw new Error("It appears you have no budgets! Please see an admin to add a budget.");
+            }  
             setCurrentPage(PAGES.BUDGET);
         } catch (err) {
             toast({
