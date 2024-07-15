@@ -19,3 +19,13 @@ export interface BudgetType {
     isLab: number,
     isClass: number
 }
+
+export interface BudgetObjectList {
+    [key: string]: number,
+}
+
+export interface BudgetUserLink {
+    id: number,
+    userID: number,
+    budgetId: number
+}

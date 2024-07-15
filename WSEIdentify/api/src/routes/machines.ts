@@ -4,9 +4,8 @@ import { machinesAvailable } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 const machineRoutes = new Hono();
-import { cors } from "hono/cors";
+
 machineRoutes.get("/machines",
-  cors(),
   async (c) => {
     try {
         const allMachines = await db.select().from(machinesAvailable);

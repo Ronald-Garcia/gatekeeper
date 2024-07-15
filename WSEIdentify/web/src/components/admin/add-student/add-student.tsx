@@ -135,7 +135,6 @@ const AddStudent = () => {
                                         className="transition-all"
                                         onCheckedChange={() => {
                                             setNewUserMachinePerms(newUser.machinePerm ^ (1 << i));
-                                            console.log(newUser.machinePerm.toString(2));
                                         }}> </Checkbox>
                                     <label
                                 key={`label for ${machine.name}`}

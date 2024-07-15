@@ -5,14 +5,14 @@ export const users = sqliteTable("users", {
     firstname: text("first name").notNull(),
     lastname: text("last name").notNull(),
     machinePerm: integer("machine permissions").notNull(),
+    budgetCodes: text("budgetCodes", {mode: "json"}),
     banned: integer("banned").notNull(),
-    budgetCodes: text("budgetAliases", { mode: 'json' }),
     admin: integer("admin").notNull(),
 });
 
-export const budgetCharges = sqliteTable("budgetCharges", {
+export const transactions = sqliteTable("transactions", {
     timeSpent: integer("timeSpent").notNull(),
-    budgetCode: integer("bCode").references(() => budgetCodes.id),
+    code: integer("budgetCode").references(() => budgetCodes.id),
     machineUsed: integer("machine").notNull(),
     userJid: integer("userJid").references(() => users.jid),
 });
@@ -28,4 +28,14 @@ export const budgetCodes = sqliteTable("budgetCodes", {
 export const machinesAvailable = sqliteTable("machines", {
     name: text("name").primaryKey(),
     rate: integer("hourly rate").notNull(),
+})
+
+export const userBudgetRelation = sqliteTable("userBudgetRelation", {
+    id: integer("relationId").primaryKey({autoIncrement: true}),
+    userId: integer("userId").references(()=>users.jid, {
+        onDelete: "cascade"
+    }),
+    budgetId: integer("budgetId").references(()=>budgetCodes.id, {
+        onDelete: "cascade"
+    })
 })

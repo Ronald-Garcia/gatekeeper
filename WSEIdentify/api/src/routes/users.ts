@@ -1,15 +1,13 @@
 import { Hono } from "hono";
 import { db } from "../db";
-import { users } from "../db/schema";
-import { eq } from "drizzle-orm";
+import { budgetCodes, users } from "../db/schema";
+import { eq, or } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { createUserSchema, updateUserSchema, getUserByJIDSchema } from "../validators/schemas";
 import { HTTPException } from "hono/http-exception";
-import { cors } from "hono/cors";
 const userRoutes = new Hono();
 
 userRoutes.get("/users",
-    cors(),
     async (c) => {
 
     const allUsers = await db.select().from(users);
@@ -18,7 +16,6 @@ userRoutes.get("/users",
   });
 
 userRoutes.get("/users/:jid", 
-  cors(),
   zValidator("param", getUserByJIDSchema),
   async (c) => {
     const { jid } = c.req.valid("param");
@@ -31,7 +28,6 @@ userRoutes.get("/users/:jid",
 });
 
 userRoutes.delete("/users/:id", 
-    cors(),
     zValidator("param", getUserByJIDSchema),
     async (c) => {
       const { jid } = c.req.valid("param");
@@ -45,9 +41,6 @@ userRoutes.delete("/users/:id",
 });
 
 userRoutes.post("/users", 
-  cors({
-    origin: "*"
-  }),
   zValidator("json", createUserSchema),
   async (c) => {
 
@@ -59,7 +52,6 @@ userRoutes.post("/users",
 });
 
 userRoutes.patch("/users/:jid",
-  cors(),
   zValidator("param", getUserByJIDSchema),
   zValidator("json", updateUserSchema),
   async (c) => {
@@ -74,24 +66,26 @@ userRoutes.patch("/users/:jid",
     return c.json(updatedUser);
   });
 
-userRoutes.patch("/users/:jid/budget",
-  cors(),
+userRoutes.patch("/users/:jid/budgets",
   zValidator("param", getUserByJIDSchema),
   async (c) => {
 
     const { jid } = c.req.valid("param");
 
-    const { budgetCodes } = await c.req.json();
+    const { budget } = await c.req.json();
 
-    const [ updatedUser ] = await db.update(users).set({
-      budgetCodes
-    }).where(eq(users.jid, jid)).returning();
+    const [ link ] = await db
+    .update(users)
+    .values({
+      
+      budget
+    }).returning();
 
-    if (!updatedUser) {
-      throw new HTTPException(404, { message: "User not found."});
-    }
-
-    return c.json(updatedUser);
+    return c.json(link);
   });
 
-export default userRoutes;
+
+
+
+  export default userRoutes;
+

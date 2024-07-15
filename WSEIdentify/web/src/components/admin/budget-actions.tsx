@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Separator } from "../ui/separator";
+import RemoveBudget from "./remove-budget/remove-budget";
 
 const BudgetActions = () => {
 
@@ -35,10 +36,7 @@ const BudgetActions = () => {
                             </Button>
                         </li>
                         <li>
-                            <Button
-                            variant="link">
-                                Remove a Budget Code
-                            </Button>
+                            <RemoveBudget></RemoveBudget>
                         </li>
                     </ul>
                     <Separator className="my-4"></Separator>
@@ -49,9 +47,6 @@ const BudgetActions = () => {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                            <DropdownMenuItem>
-                                Update a Budget Code
-                            </DropdownMenuItem>
                             <DropdownMenuItem>
                                 Send a Report
                             </DropdownMenuItem>

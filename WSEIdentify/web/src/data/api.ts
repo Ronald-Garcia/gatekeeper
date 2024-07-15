@@ -1,5 +1,5 @@
 import { API_URL } from "@/env";
-import { BudgetType, MachineType, UserType } from "./types";
+import { BudgetObjectList, BudgetType, BudgetUserLink, MachineType, UserType } from "./types";
 
 export const getUserByJID = async (userID: number) => {
     try {
@@ -10,9 +10,34 @@ export const getUserByJID = async (userID: number) => {
             throw new Error("Something unexpected happened. Please notify an admin and try again later.");
         }
         const data: UserType = await result.json();
-        console.log(data);
 
-        data.budgetCodes = Object.values(data.budgetCodes);
+        data.budgetCodes = await getBudgetsFromUser(userID);
+        console.log(data.budgetCodes);
+        return data;    
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const removeUserByJID = async (userID: number) => {
+    try {
+        const result = await fetch(`${API_URL}/users/${userID}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        if (result.status === 400) {
+            throw new Error("Student was bad, likely not an existing student. To add a student, use the Add Student action.");
+        } else if (result.status === 500) {
+            throw new Error("Something unexpected happened. Please notify an admin and try again later.");
+        }
+        const data: UserType = await result.json();
+        
+        if (!data || Object.keys(data).includes("message")) {
+            throw new Error("Student was bad, likely not an existing student. To add a student, use the Add Student action.");
+        }
+
         return data;    
     } catch (err) {
         throw err;
@@ -30,12 +55,20 @@ export const addUserToDB = async (newUser: UserType) => {
             body: JSON.stringify(newUser)
         });
         
+        newUser.budgetCodes.forEach(b => {
+            createBudgetUserLink(newUser.jid, b.id);
+        })
 
-        if (result.status === 500) {
+        if (!result.ok) {
             throw new Error("Something unexpected happened. Please notify an admin and try again later.");
         }
 
         const data = await result.json();
+
+        if (Object.keys(data).includes("message")) {
+            throw new Error("Student was bad, likely not a unique student. To edit a student, use the Update Student action.");
+        }
+
         return data;
     } catch (err) {
         throw err;
@@ -59,6 +92,10 @@ export const updateUserToDB = async (user: UserType) => {
         }
 
         const data = await result.json();
+
+        if (Object.keys(data).includes("message")) {
+            throw new Error("Student was bad, likely not a unique student. Make sure the ID being edited to is unique.");
+        }
         return data;
     } catch (err) {
         throw err;
@@ -109,9 +146,128 @@ export const addBudgetToDB = async (budget: BudgetType) => {
                 body: JSON.stringify(budget)    
             }
         );
+
+        if (!result.ok) {
+            throw new Error("Budget was not successfully added. Please double check the fields and try again.");
+        }
+
+
+
         const data: BudgetType = await result.json();
+
+        if (Object.keys(data).includes("message")) {
+            throw new Error("Budget was bad, likely not a unique budget. To edit a budget, delete the old budget and add it again.");
+        }
         return data;
     } catch (err) {
         throw err;
     }
 }
+
+export const getBudgetByID = async (budgetID: number) => {
+
+    try {
+        const result = await fetch(`${API_URL}/budgets/${budgetID}`);
+
+        if (!result.ok) {
+            throw new Error("Budget does not exist");
+        }
+
+        const data: BudgetType = await result.json();
+        return data;
+
+    } catch (err) {
+        throw err;
+    }
+}
+
+
+export const removeBudgetByID = async (budgetID: number) => {
+
+    try {
+        const result = await fetch(`${API_URL}/budgets/${budgetID}`, { method: "DELETE" });
+
+        if (result.status === 400) {
+            throw new Error("Budget was bad, likely not an existing budget. To add a budget, use the Add Budget action.");
+        } else if (result.status === 500) {
+            throw new Error("Something unexpected happened. Please notify an admin and try again later.");
+        }
+        const data: UserType = await result.json();
+        
+        if (!data || Object.keys(data).includes("message")) {
+            throw new Error("Budget was bad, likely not an existing budget. To add a budget, use the Add Budget action.");
+        }
+
+        return data;    
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const getBudgetsFromUser = async (userID: number) => {
+
+    try {
+        const result = await fetch(`${API_URL}/users/${userID}/budgets`);
+
+        if (!result.ok) {
+            throw new Error("Error");
+        }
+
+        const data: BudgetObjectList = await result.json();
+
+        const budgetArr: BudgetType[] = [];
+        Object.values(data.data).forEach(async (budget)=> {
+            console.log(budget);
+            const { budgetId } = budget;
+            console.log(budgetId);
+            const b: BudgetType = await getBudgetByID(budgetId);
+            budgetArr.push(b);
+        });
+
+        console.log(budgetArr);
+        return budgetArr;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const createBudgetUserLink = async (userID: number, budgetID: number) => {
+    try {
+        const result = await fetch(`${API_URL}/users/${userID}/budgets/${budgetID}`);
+
+        if (!result.ok) { 
+            throw new Error("Errrr");
+        }
+
+        const data: BudgetUserLink = await result.json();
+        return data;
+    } catch (err) { 
+        throw err;
+    }
+}
+
+// export const removeBudgetByAlias = async (budgetAlias: number) => {
+//     try {
+//         const result = await fetch(`${API_URL}/budgets/${budgetAlias}`,
+//             {
+//                 method: "DELETE"
+//             }
+//         );
+
+//         if (result.status === 400) {
+//             throw new Error("Budget was bad, likely not an existing budget. To add a budget, use the Add Budget action.");
+//         } else if (result.status === 500) {
+//             throw new Error("Something unexpected happened. Please notify an admin and try again later.");
+//         }
+//         const data: UserType = await result.json();
+        
+//         if (!data || Object.keys(data).includes("message")) {
+//             throw new Error("Budget was bad, likely not an existing budget. To add a budget, use the Add Budget action.");
+//         }
+
+//         data.budgetCodes = Object.values(data.budgetCodes);
+//         return data;    
+//     } catch (err) {
+//         throw err;
+//     }
+// }

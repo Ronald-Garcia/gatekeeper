@@ -4,6 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Separator } from "../ui/separator";
 import UpdateStudentSwipeDialog from "./update-student/update-student-swipe-dialog";
+import RemoveStudent from "./remove-student/remove-student";
+import { Dialog, DialogTrigger} from "../ui/dialog";
 
 const StudentActons = () => {
 
@@ -40,22 +42,28 @@ const StudentActons = () => {
                         </li>
                     </ul>
                     <Separator className="my-4"></Separator>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button
-                                >
-                                    Manage Students...
-                                </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem>
-                                Delete a Student Account
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                Send a Report
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <Dialog>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    >
+                                        Manage Students...
+                                    </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem>
+                                    <DialogTrigger>
+                                        Delete a Student Account
+                                    </DialogTrigger>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    Send a Report
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                        <RemoveStudent></RemoveStudent>
+                    </Dialog>
+
                 </CardContent>
             </Card>
         </>

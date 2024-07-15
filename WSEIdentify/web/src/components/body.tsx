@@ -6,7 +6,7 @@ import InProgress from "./machine/in-progress";
 import AdminStart from "./admin/admin-start";
 import AddStudent from "./admin/add-student/add-student";
 import UpdateStudent from "./admin/update-student/update-student";
-import AddBudget from "./admin/add-budget-code/add-student";
+import AddBudget from "./admin/add-budget-code/add-budget";
 
 
 const Body = () => {

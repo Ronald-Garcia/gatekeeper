@@ -5,6 +5,7 @@ import { $currentUser, PAGES, setCurrentPage } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "@/components/ui/button";
 import StartSessionAlert from "./start-session-alert";
+
 const SelectBudget = () => {
 
     const currentUser = useStore($currentUser);
@@ -17,17 +18,17 @@ const SelectBudget = () => {
                         Welcome, {currentUser.firstname}.
                     </CardTitle>
                     <CardDescription className="italic">
-                        {currentUser.budgetCodes !== null ? "Select the budget code to be applied." : "It seems as if you do not have any budget codes! Please contact an admin."}
+                        {"Select the budget code to be applied."}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    { currentUser.budgetCodes !== null && <ToggleGroup type="single">
+                    <ToggleGroup type="single">
                         {currentUser.budgetCodes.map((code) => {
                             return (
                                 <ToggleGroupItem key={"val" + code.id} value={"val" + code.id} variant="outline"> {code.alias} </ToggleGroupItem>
                             );
                         })}
-                    </ToggleGroup>}
+                    </ToggleGroup>
 
                 </CardContent>
                 <CardFooter className="flex justify-end space-x-4">

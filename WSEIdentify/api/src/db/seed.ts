@@ -1,5 +1,5 @@
 import { db, connection } from "./index";
-import { users, machinesAvailable, budgetCodes } from "./schema";
+import { users, machinesAvailable, budgetCodes, budgetUserLink } from "./schema";
 
 async function seed() {
   console.log("Seeding the database...");
@@ -16,7 +16,7 @@ async function seed() {
       .values({
         id: 1000001,
         alias: "FRESHMAN LAB"
-      }).returning( {id: budgetCodes.id, alias: budgetCodes.alias} );
+      }).returning();
 
       const [budget2] = await db
       .insert(budgetCodes)
@@ -25,7 +25,7 @@ async function seed() {
         alias: "SD-26",
         isSeniorDesign: 1,
         isClass: 0,
-      }).returning( {id: budgetCodes.id, alias: budgetCodes.alias });
+      }).returning();
       
       const [budget3] = await db
       .insert(budgetCodes)
@@ -34,7 +34,7 @@ async function seed() {
         alias: "Lab 1",
         isLab: 1,
         isClass: 0,
-      }).returning( {id: budgetCodes.id, alias: budgetCodes.alias });
+      }).returning();
       
   // Insert sample posts
   const [user1] = await db
@@ -46,10 +46,6 @@ async function seed() {
       machinePerm: 0b1011,
       banned: 0,
       admin: 1,
-      budgetCodes: {
-        0: budget1,
-        1: budget3
-      }
     })
     .returning({ id: users.jid });
 
@@ -73,10 +69,7 @@ async function seed() {
         lastname: "Macy",
         machinePerm: 0b0111,
         banned: 0,
-        admin: 1,
-        budgetCodes: {
-          0: budget1
-        }
+        admin: 1
     })
     .returning({ id: users.jid });
     
@@ -109,7 +102,40 @@ async function seed() {
         rate: 35
       }).returning( {name: machinesAvailable.name});
 
-      
+      const [link1] = await db
+      .insert(budgetUserLink)
+      .values({
+        userId: user2.id,
+        budgetId: budget2.id
+      }).returning();
+
+      const [link2] = await db
+      .insert(budgetUserLink)
+      .values({
+        userId: user2.id,
+        budgetId: budget1.id
+      }).returning();
+
+      const [link3] = await db
+      .insert(budgetUserLink)
+      .values({
+        userId: user1.id,
+        budgetId: budget3.id
+      }).returning();
+
+      const [link4] = await db
+      .insert(budgetUserLink)
+      .values({
+        userId: user3.id,
+        budgetId: budget2.id
+      }).returning();
+
+      const [link5] = await db
+      .insert(budgetUserLink)
+      .values({
+        userId: user3.id,
+        budgetId: budget3.id
+      }).returning();
 
       console.log("Seeding completed successfully.");
 }
