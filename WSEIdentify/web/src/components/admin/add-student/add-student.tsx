@@ -9,7 +9,7 @@ import { BudgetType, MachineType } from "@/data/types";
 import { ToggleGroup, ToggleGroupItem } from "../../ui/toggle-group";
 import { Separator } from "../../ui/separator";
 import { ChangeEvent } from "react";
-import { $newUser, toggleNewUserBudgetCodes, PAGES, setCurrentPage, setNewUserAdmin, setNewUserFirstName, setNewUserLastName, setNewUserMachinePerms } from "@/lib/store";
+import { $newUser, toggleRelation, PAGES, setCurrentPage, setNewUserAdmin, setNewUserFirstName, setNewUserLastName, setNewUserMachinePerms, resetRelations } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "../../ui/button";
 import AddStudentConfirmation from "./add-student-confirmation";
@@ -71,6 +71,7 @@ const AddStudent = () => {
     useEffect(()=> {
         renderAllAvailableMachines();
         renderAllBudgets();
+        resetRelations();
     }, []);
 
     return (
@@ -162,8 +163,7 @@ const AddStudent = () => {
                                     key={budget.alias} 
                                     value={budget.alias}
                                     onClick={() => {
-                                        toggleNewUserBudgetCodes(budget);
-                                        console.log(newUser.budgetCodes);
+                                        toggleRelation( { jid: newUser.jid, budgetId: budget.id } );
                                     }}>
                                     {budget.alias}
                                 </ToggleGroupItem>        

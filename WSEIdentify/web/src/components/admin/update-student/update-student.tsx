@@ -1,13 +1,13 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "../../ui/input";
 import { Checkbox } from "../../ui/checkbox";
-import { getAllAvailableMachines, getAllBudgetCodes } from "@/data/api";
+import { getAllAvailableMachines, getAllBudgetCodes, getBudgetsFromUser } from "@/data/api";
 import { useToast } from "../../ui/use-toast";
 import { useState, useEffect } from "react";
 import { BudgetType, MachineType } from "@/data/types";
 import { Separator } from "../../ui/separator";
 import { ChangeEvent } from "react";
-import { $newUser, PAGES, setCurrentPage, setNewUserAdmin, setNewUserFirstName, setNewUserLastName, setNewUserMachinePerms, toggleNewUserBudgetCodes } from "@/lib/store";
+import { $newRelationList, $newUser, $relationsToDelete, PAGES, resetRelations, setCurrentPage, setNewUserAdmin, setNewUserFirstName, setNewUserLastName, setNewUserMachinePerms, toggleRelation, toggleRelationToDelete } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "../../ui/button";
 import UpdateStudentConfirmation from "./update-student-confirmation";
@@ -15,11 +15,15 @@ import UpdateStudentConfirmation from "./update-student-confirmation";
 const UpdateStudent = () => {
 
     const newUser = useStore($newUser);
+    const newRelations = useStore($newRelationList);
+    const relationsToDelete = useStore($relationsToDelete);
+
+
 
     const { toast } = useToast();
     const [ allAvalableMachines, setAllAvailableMachines ] = useState<MachineType[]>([]);
     const [ allBudgets, setAllBudgets ] = useState<BudgetType[]>([]);
-
+    const [ userBudgets, setUserBudgets ] = useState<BudgetType[]>([]); 
     const onChangeFirstName = (e: ChangeEvent<HTMLInputElement>) => {
         setNewUserFirstName(e.target.value);
     }
@@ -67,6 +71,8 @@ const UpdateStudent = () => {
     useEffect(()=> {
         renderAllAvailableMachines();
         renderAllBudgets();
+        getBudgetsFromUser(newUser.jid).then(budgets => setUserBudgets(budgets));
+        resetRelations();
     }, []);
 
     return (
@@ -153,19 +159,36 @@ const UpdateStudent = () => {
                         </p>
                     </div>
                     {allBudgets.map((budget)=> {
-                        const userBudget = newUser.budgetCodes.find(b => b.id === budget.id);
+                        const alreadyHave = userBudgets.some(b => b.id === budget.id);
                         return (
                             <div key={`div for ${budget.id}`} className="flex items-center space-x-2">
+
+                                {alreadyHave ? <Checkbox
+                                    key={budget.alias} 
+                                    id={`${budget.id}`}
+                                    defaultChecked={alreadyHave}
+                                    className="transition-all"
+                                    onCheckedChange={() => {
+                                        toggleRelationToDelete({ jid: newUser.jid, budgetId: budget.id });
+                                        console.log("im here, updating and deleting");
+                                        console.log(newRelations);
+                                        console.log(relationsToDelete);
+                                    }}
+                                    >
+                                </Checkbox> 
+                                : 
                                 <Checkbox
                                     key={budget.alias} 
                                     id={`${budget.id}`}
-                                    defaultChecked={userBudget ? true : false}
+                                    defaultChecked={alreadyHave}
                                     className="transition-all"
                                     onCheckedChange={() => {
-                                        toggleNewUserBudgetCodes(budget);
+                                        toggleRelation({ jid: newUser.jid, budgetId: budget.id });
+                                        console.log("im here, updating");
+                                        console.log(newRelations);
                                     }}
                                     >
-                                </Checkbox>        
+                                </Checkbox>}        
                                 <label
                                     key={`label for ${budget.id}`}
                                     htmlFor={`${budget.id}`}

@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { addUserToDB } from "@/data/api";
-import { $newUser, invalidNewUser } from "@/lib/store";
+import { addUserToDB, createRelation } from "@/data/api";
+import { $newRelationList, $newUser, invalidNewUser } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 
 
@@ -11,6 +11,7 @@ const AddStudentConfirmation = () => {
     const { toast } = useToast();
 
     const newUser = useStore($newUser);
+    const newRelations = useStore($newRelationList);
 
     const onSubmitClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         try {
@@ -30,6 +31,7 @@ const AddStudentConfirmation = () => {
     const onYesClick = async () => {
         try {
             await addUserToDB(newUser);
+            newRelations.forEach(async r => await createRelation(r.jid, r.budgetId));
             toast({
                 variant: "default",
                 description: `${newUser.firstname} was successfully added.`,
@@ -41,7 +43,6 @@ const AddStudentConfirmation = () => {
                 description: (err as Error).message,
                 title: "Uh oh! Something went wrong! 😔"
             });
-            console.log(err);
         }
     }
 

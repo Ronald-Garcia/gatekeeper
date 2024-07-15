@@ -31,7 +31,7 @@ export const getBudgetSchema = z.object({
 })
 
 export const getRelationSchema = z.object({
-    jid: z.coerce.number().int().positive(),
+    userId: z.coerce.number().int().positive(),
     budgetId: z.coerce.number().int().positive()
 })
 

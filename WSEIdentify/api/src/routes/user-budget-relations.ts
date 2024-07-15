@@ -39,7 +39,7 @@ relationRoutes.get("/users/:jid/budgets",
 relationRoutes.get("/users/:jid/budgets/:budgetId", 
   zValidator("param", getRelationSchema),
   async (c) => {
-    const { jid, budgetId } = c.req.valid("param");
+    const { userId: jid, budgetId } = c.req.valid("param");
     const [ relation  ] = await db.select().from(userBudgetRelation).where(and(eq(users.jid, jid), eq(budgetCodes.id, budgetId))); 
 
     if (!relation) {
@@ -63,12 +63,12 @@ relationRoutes.post("/users/budgets",
     }
 )
 
-relationRoutes.delete("/users/:jid/budgets/:budgetId", 
+relationRoutes.delete("/users/:userId/budgets/:budgetId", 
     zValidator("param", getRelationSchema),
     async (c) => {
-      const { jid, budgetId } = c.req.valid("param");
+      const { userId, budgetId } = c.req.valid("param");
       
-      const [ deletedRelation ] = await db.delete(userBudgetRelation).where(and(eq(userBudgetRelation.userId, jid), eq(userBudgetRelation.budgetId, budgetId))).returning();
+      const [ deletedRelation ] = await db.delete(userBudgetRelation).where(and(eq(userBudgetRelation.userId, userId), eq(userBudgetRelation.budgetId, budgetId))).returning();
       
       if (!deletedRelation) {
         throw new HTTPException(404, { message: "Relation not found."});
@@ -82,7 +82,7 @@ relationRoutes.patch("/users/:jid/budgets/:budgetId",
   zValidator("json", updateRelationSchema),
   async (c) => {
 
-    const { jid, budgetId } = c.req.valid("param"); 
+    const { userId: jid, budgetId } = c.req.valid("param"); 
     const body = c.req.valid("json");
     // UPDATE posts SET content = :content WHERE id = :id
     const [ updatedRelation ] = await db.update(userBudgetRelation).set(body).where(and(eq(userBudgetRelation.userId, jid), eq(userBudgetRelation.budgetId, budgetId))).returning();

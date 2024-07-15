@@ -220,13 +220,15 @@ export const getBudgetsFromUser = async (userID: number) => {
 
 export const createRelation = async (userID: number, budgetID: number) => {
     try {
+
+        console.log(JSON.stringify({ userId: userID, budgetId: budgetID }));
         const result = await fetch(`${API_URL}/users/budgets`,
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ userId: userID, budgetId: budgetID}) 
+                body: JSON.stringify({ userId: userID, budgetId: budgetID }) 
             }
         );
 
@@ -244,7 +246,11 @@ export const createRelation = async (userID: number, budgetID: number) => {
 
 export const deleteRelation = async (userID: number, budgetID: number) => {
     try {
-        const result = await fetch(`${API_URL}/users/${userID}/budgets/${budgetID}`);
+        const result = await fetch(`${API_URL}/users/${userID}/budgets/${budgetID}`,
+            {
+                method: "DELETE"
+            }
+        );
 
         if (!result.ok) { 
             throw new Error("Request was bad, likely because either the budget or user do not exist.");

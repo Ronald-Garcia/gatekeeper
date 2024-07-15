@@ -20,7 +20,7 @@ export interface BudgetType {
 }
 
 export interface RelationType {
-    id: number,
-    userID: number,
+    id?: number,
+    jid: number,
     budgetId: number
 }

@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { updateUserToDB } from "@/data/api";
-import { $newUser, invalidNewUser } from "@/lib/store";
+import { createRelation, deleteRelation, updateUserToDB } from "@/data/api";
+import { $newRelationList, $newUser, $relationsToDelete, invalidNewUser } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 
 
@@ -11,6 +11,8 @@ const UpdateStudentConfirmation = () => {
     const { toast } = useToast();
 
     const newUser = useStore($newUser);
+    const newRelations = useStore($newRelationList);
+    const relationsToDelete = useStore($relationsToDelete);
 
     const onSubmitClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         try {
@@ -30,6 +32,9 @@ const UpdateStudentConfirmation = () => {
     const onYesClick = async () => {
         try {
             await updateUserToDB(newUser);
+            newRelations.forEach(async r => await createRelation(r.jid, r.budgetId));
+            relationsToDelete.forEach(async r => await deleteRelation(r.jid, r.budgetId));
+
             toast({
                 variant: "default",
                 description: `${newUser.firstname} was successfully updated.`,
