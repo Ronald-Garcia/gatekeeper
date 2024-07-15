@@ -47,6 +47,7 @@ async function seed() {
       machinePerm: 0b1011,
       banned: 0,
       admin: 1,
+      jhed: "rgarci47"
     })
     .returning({ id: users.jid });
 
@@ -58,7 +59,8 @@ async function seed() {
         lastname: "Bob",
         machinePerm: 0b0000,
         banned: 1,
-        admin: 0
+        admin: 0,
+        jhed: "bbob22"
     })
     .returning({ id: users.jid });
 
@@ -70,7 +72,8 @@ async function seed() {
         lastname: "Macy",
         machinePerm: 0b0111,
         banned: 0,
-        admin: 1
+        admin: 1,
+        jhed: "smacy29"
     })
     .returning({ id: users.jid });
     

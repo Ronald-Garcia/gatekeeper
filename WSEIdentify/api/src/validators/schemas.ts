@@ -7,6 +7,7 @@ export const createUserSchema = z.object({
     machinePerm: z.coerce.number().int().max(0x1111, "Invalid permissions number.").nonnegative(),
     banned: z.coerce.number().int().min(0).max(1),
     admin: z.coerce.number().int().min(0).max(1),
+    jhed: z.string().min(1, "JHED is required"),
 })
 
 export const updateUserSchema = createUserSchema.partial();

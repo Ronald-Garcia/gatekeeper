@@ -37,6 +37,7 @@ export const $currentUser = atom<UserType>({
         banned: 0,
         machinePerm: 0,
         admin: 0,
+        jhed: ""
     }
 );
 
@@ -58,6 +59,7 @@ export const $newUser = atom<UserType>({
     banned: 0,
     machinePerm: 0,
     admin: 0,
+    jhed: ""
 });
 
 export const setNewUserJid = (jid: string) => {
@@ -89,13 +91,18 @@ export const setNewUserAdmin = (admin: number) => {
     $newUser.get().admin = admin;
 }
 
+export const setNewUserJHED = (jhed: string) => {
+    $newUser.get().jhed = jhed;
+}
+
 export const invalidNewUser = () => {
 
     const newUser = $newUser.get();
     const noNameChosen = (newUser.firstname === "") || (newUser.lastname === "");
     const noJIDChosen = (newUser.jid === -1);
+    const noJHEDChosen = (newUser.jhed === "");
 
-    return noNameChosen || noJIDChosen;
+    return noNameChosen || noJIDChosen || noJHEDChosen;
 }
 
 export const setNewUser = (user: UserType) => {

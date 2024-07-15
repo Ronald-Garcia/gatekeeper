@@ -4,12 +4,12 @@ import { Input } from "../../ui/input";
 import { Checkbox } from "../../ui/checkbox";
 import { getAllAvailableMachines, getAllBudgetCodes } from "@/data/api";
 import { useToast } from "../../ui/use-toast";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { BudgetType, MachineType } from "@/data/types";
 import { ToggleGroup, ToggleGroupItem } from "../../ui/toggle-group";
 import { Separator } from "../../ui/separator";
 import { ChangeEvent } from "react";
-import { $newUser, toggleRelation, PAGES, setCurrentPage, setNewUserAdmin, setNewUserFirstName, setNewUserLastName, setNewUserMachinePerms, resetRelations } from "@/lib/store";
+import { $newUser, toggleRelation, PAGES, setCurrentPage, setNewUserAdmin, setNewUserFirstName, setNewUserLastName, setNewUserMachinePerms, resetRelations, setNewUserJHED } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "../../ui/button";
 import AddStudentConfirmation from "./add-student-confirmation";
@@ -18,17 +18,24 @@ const AddStudent = () => {
 
     const newUser = useStore($newUser);
 
+    const [ detectChange, setDetectChange ] = useState<boolean>(false);
+
     const { toast } = useToast();
     const [ allAvalableMachines, setAllAvailableMachines ] = useState<MachineType[]>([]);
     const [ allBudgets, setAllBudgets ] = useState<BudgetType[]>([]);
 
-
+    const jhedInput = useRef(null);
 
     const onChangeFirstName = (e: ChangeEvent<HTMLInputElement>) => {
         setNewUserFirstName(e.target.value);
+        setDetectChange(c => !c);
     }
     const onChangeLastName = (e: ChangeEvent<HTMLInputElement>) => {
         setNewUserLastName(e.target.value);
+        setDetectChange(c => !c);
+    }
+    const onChangeJHED = (e: ChangeEvent<HTMLInputElement>) => {
+        setNewUserJHED(e.target.value);
     }
     
     const renderAllAvailableMachines = async () => {
@@ -46,6 +53,13 @@ const AddStudent = () => {
             })
         }
     }
+
+    useEffect(()=>{
+        (jhedInput.current! as HTMLInputElement).placeholder = "JHED"
+        if (jhedInput && (newUser.lastname !== "")) {
+            (jhedInput.current! as HTMLInputElement).placeholder = `JHED (e.g. ${newUser.firstname[0].toLowerCase() || "f"}${newUser.lastname.length > 5 ? newUser.lastname.slice(0, 5).toLowerCase() : newUser.lastname.toLowerCase()}01)`;
+        }
+    },[detectChange])
 
     const renderAllBudgets = async () => {
         try {
@@ -102,6 +116,10 @@ const AddStudent = () => {
                         <Input placeholder="Last Name"
                         onChange={onChangeLastName}>
                         </Input>
+                        <Input 
+                        ref={jhedInput}
+                        onChange={onChangeJHED}
+                        ></Input>
                     </div>
                     <div className="flex ">
                         <AddStudentSwipeDialog></AddStudentSwipeDialog>

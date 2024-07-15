@@ -4,7 +4,8 @@ export interface UserType {
     lastname: string,
     banned: number,
     machinePerm: number,
-    admin: number
+    admin: number,
+    jhed: string
 }
 
 export interface MachineType {

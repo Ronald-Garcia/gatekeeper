@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { BudgetType, MachineType } from "@/data/types";
 import { Separator } from "../../ui/separator";
 import { ChangeEvent } from "react";
-import { $newRelationList, $newUser, $relationsToDelete, PAGES, resetRelations, setCurrentPage, setNewUserAdmin, setNewUserFirstName, setNewUserLastName, setNewUserMachinePerms, toggleRelation, toggleRelationToDelete } from "@/lib/store";
+import { $currentUser, $newRelationList, $newUser, $relationsToDelete, PAGES, resetRelations, setCurrentPage, setNewUserAdmin, setNewUserFirstName, setNewUserLastName, setNewUserMachinePerms, toggleRelation, toggleRelationToDelete } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "../../ui/button";
 import UpdateStudentConfirmation from "./update-student-confirmation";
@@ -15,6 +15,7 @@ import UpdateStudentConfirmation from "./update-student-confirmation";
 const UpdateStudent = () => {
 
     const newUser = useStore($newUser);
+    const currentUser = useStore($currentUser);
     const newRelations = useStore($newRelationList);
     const relationsToDelete = useStore($relationsToDelete);
 
@@ -84,7 +85,7 @@ const UpdateStudent = () => {
                     </CardTitle>
                     <CardDescription className="italic">
                         This page is to update {newUser.firstname}'s account.
-                        To change the JID, please create a new account and delete this one.
+                        To change the JID or JHED, please create a new account and delete this one.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
@@ -121,12 +122,14 @@ const UpdateStudent = () => {
 
                     <div className="flex flex-col space-y-2">
                         <div className="flex items-center space-x-2 ">
-                            <Checkbox id="isAdmin" className="transition-all" defaultChecked={newUser.admin === 1} onCheckedChange={onCheckedChangedAdmin}/>
+                            <Checkbox id="isAdmin" className="transition-all" defaultChecked={newUser.admin === 1} disabled={newUser.jid === currentUser.jid} onCheckedChange={onCheckedChangedAdmin}/>
                             <label
                                 htmlFor="isAdmin"
-                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
                                 Admin?
                             </label>
+                            {(newUser.jid === currentUser.jid) && <p className="text-sm italic leading-none">You cannot change your own admin status! Please use another admin account.</p>}
                         </div>
                         {allAvalableMachines.map((machine, i)=> {
                                 return (
