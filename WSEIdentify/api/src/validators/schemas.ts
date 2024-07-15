@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+/*
+ ****************
+ * USER SCHEMAS *
+ ****************
+ */
+
 export const createUserSchema = z.object({
     jid: z.coerce.number().nonnegative().int(),
     firstname: z.string().min(1, "First name is required"),
@@ -16,6 +22,12 @@ export const getUserByJIDSchema = z.object({
     jid: z.coerce.number().int().nonnegative(),
 })
 
+/*
+ ******************
+ * BUDGET SCHEMAS *
+ ******************
+ */
+
 export const createBudgetSchema = z.object({
     id: z.coerce.number().int().positive(),
     alias: z.string().min(1, "Alias is required"),
@@ -31,6 +43,12 @@ export const getBudgetSchema = z.object({
     id: z.coerce.number().int().positive()
 })
 
+/*
+ ********************
+ * RELATION SCHEMAS *
+ ********************
+ */
+
 export const getRelationSchema = z.object({
     userId: z.coerce.number().int().positive(),
     budgetId: z.coerce.number().int().positive()
@@ -39,6 +57,12 @@ export const getRelationSchema = z.object({
 export const createRelationSchema = getRelationSchema;
 export const updateRelationSchema = createRelationSchema.partial();
 
+/*
+ ***********************
+ * TRANSACTION SCHEMAS *
+ ***********************
+ */
+
 export const createTransactionSchema = z.object({
     timeSpent: z.coerce.number(),
     code: z.coerce.number().int().positive(),
@@ -46,7 +70,11 @@ export const createTransactionSchema = z.object({
     userJid: z.coerce.number().int().positive(),
 });
 
-
+/*
+ *****************
+ * QUERY SCHEMAS *
+ *****************
+ */
 export const queryParamsSchema = z.object({
     sort: z.enum(["asc", "desc"]).optional(),
     search: z.string().optional(),

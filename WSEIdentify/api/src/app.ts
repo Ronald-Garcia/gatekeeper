@@ -8,19 +8,21 @@ import { cors } from 'hono/cors';
 import transactionRoutes from './routes/transactions';
 const app = new Hono()
 
+// for testing, remove when in production
 app.use("/*", cors());
 
 app.get('/', (c) => {
   return c.text('Hello Hono!')
 })
 
-
+// added routes
 app.route("/", userRoutes);
 app.route("/", machineRoutes);
 app.route("/", budgetRoutes);
 app.route("/", relationRoutes);
 app.route("/", transactionRoutes);
 
+// error handling
 app.onError((err, c) => {
   console.error(`${err}`)
 
