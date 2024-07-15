@@ -2,7 +2,7 @@ import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
 /**
  * The sqlite table to store all the student accounts of the interlock system.
- * @column jid the unique JID of the account.
+ * @primary jid the unique JID of the account.
  * @column firstname the first name of the account.
  * @column lastname the last name of the account.
  * @column machinePerm the machine permissions number (see WSEIdentify/web/data/types.ts for documentation on the machinePerm)
@@ -21,31 +21,57 @@ export const users = sqliteTable("users", {
 
 /**
  * The sqlite table to store all the transactions made by accounts in the interlock system.
+ * @primary id the id of the transaction.
  * @column timeSpent the time spent.
- * @column code the budget code that was charged.
- * @column machineUsed the machine that was used.
- * @column userJid the JID of the account that made the transaction.
+ * @foreign code the budget code that was charged.
+ * @foreign machineUsed the machine that was used.
+ * @foreign userJid the JID of the account that made the transaction.
+ * @column date the date the transaction was made.
  */
 export const transactions = sqliteTable("transactions", {
+    id: integer("id").primaryKey(),
     timeSpent: integer("timeSpent").notNull(),
     code: integer("budgetCode").references(() => budgetCodes.id),
-    machineUsed: integer("machine").notNull(),
+    machineUsed: integer("machine").references(()=>machinesAvailable.id, { onDelete: "no action" }),
     userJid: integer("userJid").references(() => users.jid),
+    date: integer("dateAdded", { mode: "timestamp"}).notNull(),
 });
 
+
+/**
+ * The sqlite table to store all the budget codes of the interlock system.
+ * @primary id the id of the budget code.
+ * @column alias the alias of the budget code.
+ * @column whether or not this code is a senior design team.
+ * @column whether or not this code is a lab.
+ * @column whether or not this code is a class. 
+ */
 export const budgetCodes = sqliteTable("budgetCodes", {
-    id: integer("budgetCode").primaryKey(),
+    id: integer("budgetCode").primaryKey({ autoIncrement: true }),
     alias: text("alias"),
     isSeniorDesign: integer("isSeniorDesign").default(0),
     isLab: integer("isLab").default(0),
     isClass: integer("isClass").default(1)
 });
 
+/**
+ * The sqlite table to store all the machines that are registered with the interlock system.
+ * @primary id the id of the machine.
+ * @column name the name of the machine.
+ * @column rate the hourly rate of the machine.
+ */
 export const machinesAvailable = sqliteTable("machines", {
-    name: text("name").primaryKey(),
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    name: text("name").notNull(),
     rate: integer("hourly rate").notNull(),
 })
 
+/**
+ * The sqlite join table to relate users and budgets.
+ * @primary id the id of the relation.
+ * @foreign userId the id of the account that is referenced.
+ * @foreign budgetId the id of the budget that is referenced.
+ */
 export const userBudgetRelation = sqliteTable("userBudgetRelation", {
     id: integer("relationId").primaryKey({autoIncrement: true}),
     userId: integer("userId").references(()=>users.jid, {

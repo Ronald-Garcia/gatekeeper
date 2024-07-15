@@ -25,3 +25,10 @@ export interface RelationType {
     jid: number,
     budgetId: number
 }
+
+export interface TransactionType {
+    timeSpent: number,
+    code: number,
+    machineUsed: number,
+    userJid: number
+}

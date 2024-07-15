@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
 import Timer from "./timer";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
-import { $budgetCodeUsed, PAGES, setCurrentPage } from "@/lib/store";
+import { $budgetCodeUsed, $currentUser, PAGES, setCurrentPage } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "../ui/use-toast";
+import { TransactionType } from "@/data/types";
+import { addTransactionToDB } from "@/data/api";
 
 const InProgress = () => {
 
     const budgetCode = useStore($budgetCodeUsed);
+    const currentUser = useStore($currentUser);
 
     const [time, setTime] = useState<number>(0);
     const { toast } = useToast();
@@ -21,6 +24,33 @@ const InProgress = () => {
             clearInterval(interval)
         };
     }, []);
+
+    const onSubmit = async () => {
+        try {
+            const transaction: TransactionType = await addTransactionToDB({
+                timeSpent: time,
+                code: budgetCode,
+                machineUsed: 1,
+                userJid: currentUser.jid
+            });
+    
+            console.log(transaction);
+            
+            toast({
+                title: "Session finished!",
+                description: "The session was successfully finished, billing information was sent!"
+            });
+        } catch (err) {
+            toast({
+                variant: "destructive",
+                description: (err as Error).message,
+                title: "Uh oh! Something went wrong! 😔"
+            })
+        }
+
+        setCurrentPage(PAGES.START);
+
+    }
     return (
         <>
             <Card>
@@ -39,13 +69,7 @@ const InProgress = () => {
                     </CardContent>
                     <CardFooter 
                         className="justify-center"
-                        onClick={() => {
-                            toast({
-                                title: "Session finished!",
-                                description: "The session was successfully finished, billing information was sent!"
-                            });
-                            setCurrentPage(PAGES.START);
-                        }}>
+                        onClick={onSubmit}>
                         <Button>
                             Tap when finished!
                         </Button>

@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { $currentUser, $newBudget, PAGES, setCurrentPage, setNewBudget } from "@/lib/store";
+import { $budgetCodeUsed, $currentUser, PAGES, setBudgetCodeUsed, setCurrentPage } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "@/components/ui/button";
 import StartSessionAlert from "./start-session-alert";
@@ -13,7 +13,9 @@ const SelectBudget = () => {
 
     const [userBudgets, setUserBudgets] = useState<BudgetType[]>([]);
     const currentUser = useStore($currentUser);
-    const budgetToBill = useStore($newBudget);
+    const budgetToBill = useStore($budgetCodeUsed);
+
+    const [budgetAdded, setBudgetAdded] = useState<boolean>(false);
 
     useEffect(() => {
         getBudgetsFromUser(currentUser.jid).then(budgets => setUserBudgets(budgets));
@@ -38,7 +40,10 @@ const SelectBudget = () => {
                                     key={"val" + code.id} 
                                     value={"val" + code.id} 
                                     variant="outline"
-                                    onClick={() => {setNewBudget(code)}}> {code.alias} </ToggleGroupItem>
+                                    onClick={() => {
+                                        setBudgetAdded(b => (!b && (budgetToBill !== code.id)))
+                                        setBudgetCodeUsed((budgetToBill !== code.id) ? code.id : 0);
+                                    }}> {code.alias} </ToggleGroupItem>
                             );
                         })}
                     </ToggleGroup>
@@ -46,7 +51,7 @@ const SelectBudget = () => {
                 </CardContent>
                 <CardFooter className="flex justify-end space-x-4">
                     <Button variant="secondary" onClick={()=>{setCurrentPage(PAGES.START)}}> Cancel </Button>
-                    <StartSessionAlert disabled={userBudgets === null}></StartSessionAlert>
+                    <StartSessionAlert disabled={userBudgets === null} budgetAdded={budgetAdded}></StartSessionAlert>
                 </CardFooter>
             </Card>
         </>

@@ -38,3 +38,19 @@ export const getRelationSchema = z.object({
 
 export const createRelationSchema = getRelationSchema;
 export const updateRelationSchema = createRelationSchema.partial();
+
+export const createTransactionSchema = z.object({
+    timeSpent: z.coerce.number(),
+    code: z.coerce.number().int().positive(),
+    machineUsed: z.coerce.number().int().positive(),
+    userJid: z.coerce.number().int().positive(),
+});
+
+
+export const queryParamsSchema = z.object({
+    sort: z.enum(["asc", "desc"]).optional(),
+    search: z.string().optional(),
+    page: z.coerce.number().int().positive().optional(),
+    limit: z.coerce.number().int().positive().optional(),
+  });
+  

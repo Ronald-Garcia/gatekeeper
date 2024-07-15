@@ -5,6 +5,7 @@ import budgetRoutes from './routes/budget-codes';
 import relationRoutes from './routes/user-budget-relations';
 import { HTTPException } from 'hono/http-exception';
 import { cors } from 'hono/cors';
+import transactionRoutes from './routes/transactions';
 const app = new Hono()
 
 app.use("/*", cors());
@@ -18,6 +19,7 @@ app.route("/", userRoutes);
 app.route("/", machineRoutes);
 app.route("/", budgetRoutes);
 app.route("/", relationRoutes);
+app.route("/", transactionRoutes);
 
 app.onError((err, c) => {
   console.error(`${err}`)
@@ -26,7 +28,7 @@ app.onError((err, c) => {
     return err.getResponse();
   }
 
-  return c.json( {message: 'An unexpected error occurred.'} );
+  return c.json( {message: 'An unexpected error occurred.'}, 500);
 });
 
 export default app;

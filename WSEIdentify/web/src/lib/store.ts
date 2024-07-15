@@ -45,9 +45,9 @@ export const setUser = (newUser: UserType) => {
     $currentUser.set(newUser);
 }
 
-export const $budgetCodeUsed = atom<string>("");
+export const $budgetCodeUsed = atom<number>(0);
 
-export const setBudgetCodeUsed = (newBudgetCodeUsed: string) => {
+export const setBudgetCodeUsed = (newBudgetCodeUsed: number) => {
     $budgetCodeUsed.set(newBudgetCodeUsed);
 }
 

@@ -1,5 +1,5 @@
 import { API_URL } from "@/env";
-import { BudgetType, RelationType, MachineType, UserType } from "./types";
+import { BudgetType, RelationType, MachineType, UserType, TransactionType } from "./types";
 
 export const getUserByJID = async (userID: number) => {
     try {
@@ -17,7 +17,7 @@ export const getUserByJID = async (userID: number) => {
         const data: UserType = await result.json();
 
         if (!data || Object.keys(data).includes("message")) {
-            throw new Error("Budget was bad, likely not an existing budget. To add a budget, use the Add Budget action.");
+            throw new Error("User was bad, likely not an existing user. To add a user,  the Add Budget action.");
         }
 
         return data;    
@@ -119,7 +119,6 @@ export const getAllAvailableMachines = async () => {
     }
 }
 
-
 export const getAllBudgetCodes = async () => {
 
     try {
@@ -135,7 +134,6 @@ export const getAllBudgetCodes = async () => {
         throw err;
     }
 }
-
 
 export const addBudgetToDB = async (budget: BudgetType) => {
 
@@ -184,7 +182,6 @@ export const getBudgetByID = async (budgetID: number) => {
     }
 }
 
-
 export const removeBudgetByID = async (budgetID: number) => {
 
     try {
@@ -225,8 +222,6 @@ export const getBudgetsFromUser = async (userID: number) => {
 
 export const createRelation = async (userID: number, budgetID: number) => {
     try {
-
-        console.log(JSON.stringify({ userId: userID, budgetId: budgetID }));
         const result = await fetch(`${API_URL}/users/budgets`,
             {
                 method: "POST",
@@ -268,3 +263,22 @@ export const deleteRelation = async (userID: number, budgetID: number) => {
     }
 }
 
+export const addTransactionToDB = async (t: TransactionType) => {
+
+    const result = await fetch(`${API_URL}/transactions`,
+        {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(t)
+        }
+    );
+
+    if (!result.ok) {
+        throw new Error("Request was bad, likely because either budget or user do not exist.");
+    }
+
+    const data: TransactionType = await result.json();
+    return data;
+}

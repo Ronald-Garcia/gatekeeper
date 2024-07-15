@@ -1,12 +1,28 @@
 import { PAGES, setCurrentPage } from "@/lib/store";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { useToast } from "../ui/use-toast";
 
 type StartSessionAlertProps = {
-    disabled: boolean
+    disabled: boolean,
+    budgetAdded: boolean
 }
 
-const StartSessionAlert = ({ disabled }: StartSessionAlertProps) => {
+const StartSessionAlert = ({ disabled, budgetAdded }: StartSessionAlertProps) => {
+
+    const { toast } = useToast();
+
+    const onSubmit = () => {
+        if (budgetAdded) {
+            setCurrentPage(PAGES.IP)
+        } else {
+            toast({
+                variant: "destructive",
+                description: "No budget was selected! Please select a budget.",
+                title: "Uh oh! Something went wrong! 😔"
+            })
+        }
+    }
 
     return (
         <>
@@ -32,7 +48,7 @@ const StartSessionAlert = ({ disabled }: StartSessionAlertProps) => {
                                     Wait...
                                 </Button>
                             </AlertDialogCancel>
-                            <Button variant="destructive" onClick={() => {setCurrentPage(PAGES.IP)}}>
+                            <Button variant="destructive" onClick={onSubmit}>
                                 Ready!
                             </Button>
                     </AlertDialogFooter>

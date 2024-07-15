@@ -3,11 +3,20 @@ import { db } from "../db";
 import { budgetCodes } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
-import { createBudgetSchema, getBudgetSchema } from "../validators/schemas";
+import { createBudgetSchema, getBudgetSchema, queryParamsSchema } from "../validators/schemas";
 const budgetRoutes = new Hono();
 
+/**
+ * Route to get all budgets in the data base.
+ * TODO: Add pagination and search functions.
+ */
+
 budgetRoutes.get("/budgets", 
+  zValidator("query", queryParamsSchema),
   async (c) => {
+
+    //const { sort, search, page = 1, limit = 10}
+
     const allBudgets = await db.select().from(budgetCodes);
     return c.json(allBudgets);  
 });
