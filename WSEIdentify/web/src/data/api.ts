@@ -15,6 +15,11 @@ export const getUserByJID = async (userID: number) => {
 
 
         const data: UserType = await result.json();
+
+        if (!data || Object.keys(data).includes("message")) {
+            throw new Error("Budget was bad, likely not an existing budget. To add a budget, use the Add Budget action.");
+        }
+
         return data;    
     } catch (err) {
         throw err;

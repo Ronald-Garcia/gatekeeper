@@ -17,7 +17,6 @@ const InProgress = () => {
         const interval = setInterval(()=> {
             setTime(time => time + 1000);
         }, 1000)
-        console.log(time);
         return () => {
             clearInterval(interval)
         };
