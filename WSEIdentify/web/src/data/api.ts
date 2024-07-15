@@ -211,7 +211,7 @@ export const getBudgetsFromUser = async (userID: number) => {
             throw new Error("Error");
         }
 
-        const data: RelationType[] = await result.json();
+        const data: BudgetType[] = await result.json();
         return data;
     } catch (err) {
         throw err;
@@ -256,3 +256,4 @@ export const deleteRelation = async (userID: number, budgetID: number) => {
         throw err;
     }
 }
+

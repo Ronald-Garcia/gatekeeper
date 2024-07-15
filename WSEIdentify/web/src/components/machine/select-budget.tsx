@@ -6,12 +6,18 @@ import { useStore } from "@nanostores/react";
 import { Button } from "@/components/ui/button";
 import StartSessionAlert from "./start-session-alert";
 import { getBudgetsFromUser } from "@/data/api";
+import { useState, useEffect } from "react";
+import { BudgetType } from "@/data/types";
 
 const SelectBudget = () => {
 
+    const [userBudgets, setUserBudgets] = useState<BudgetType[]>([]);
     const currentUser = useStore($currentUser);
 
-    const userBudgets = getBudgetsFromUser(currentUser.jid);
+    useEffect(() => {
+        getBudgetsFromUser(currentUser.jid).then(budgets => setUserBudgets(budgets));
+    }, [])
+
     return (
         <>
             <Card className="w-[90%]">
@@ -35,7 +41,7 @@ const SelectBudget = () => {
                 </CardContent>
                 <CardFooter className="flex justify-end space-x-4">
                     <Button variant="secondary" onClick={()=>{setCurrentPage(PAGES.START)}}> Cancel </Button>
-                    <StartSessionAlert disabled={currentUser.budgetCodes === null}></StartSessionAlert>
+                    <StartSessionAlert disabled={userBudgets === null}></StartSessionAlert>
                 </CardFooter>
             </Card>
         </>
