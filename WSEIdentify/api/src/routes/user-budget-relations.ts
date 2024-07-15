@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { db } from "../db";
 import { budgetCodes, userBudgetRelation, users } from "../db/schema";
-import { eq, or, and } from "drizzle-orm";
+import { eq, or, and, exists } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { createUserSchema, updateUserSchema, getUserByJIDSchema, createBudgetSchema, getBudgetSchema, getRelationSchema, createRelationSchema, updateRelationSchema } from "../validators/schemas";
 import { HTTPException } from "hono/http-exception";
@@ -12,8 +12,8 @@ relationRoutes.get("/users/:jid/budgets",
     zValidator("param", getUserByJIDSchema),
     async (c) => {
       const { jid } = c.req.valid("param");
-      const budgets = await db.select().from(userBudgetRelation).where(eq(userBudgetRelation.userId, jid));
-  
+      const budgets = await db.select().from(budgetCodes).where(exists(db.select().from(userBudgetRelation).where(and(eq(userBudgetRelation.userId, jid), eq(userBudgetRelation.budgetId, budgetCodes.id)))));
+      
       if (!budgets) {
         throw new HTTPException(404, { message: "No budgets found"});
       }
@@ -26,7 +26,7 @@ relationRoutes.get("/users/:jid/budgets",
     zValidator("param", getBudgetSchema),
     async (c) => {
       const { id: budgetId } = c.req.valid("param");
-      const usersOfBudget = await db.select().from(userBudgetRelation).where(eq(userBudgetRelation.budgetId, budgetId));
+      const usersOfBudget = await db.select().from(users).where(exists(db.select().from(userBudgetRelation).where(and(eq(userBudgetRelation.userId, users.jid), eq(userBudgetRelation.budgetId, budgetId)))));
   
       if (!usersOfBudget) {
         throw new HTTPException(404, { message: "No users found"});

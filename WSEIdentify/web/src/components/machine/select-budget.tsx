@@ -5,11 +5,13 @@ import { $currentUser, PAGES, setCurrentPage } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "@/components/ui/button";
 import StartSessionAlert from "./start-session-alert";
+import { getBudgetsFromUser } from "@/data/api";
 
 const SelectBudget = () => {
 
     const currentUser = useStore($currentUser);
 
+    const userBudgets = getBudgetsFromUser(currentUser.jid);
     return (
         <>
             <Card className="w-[90%]">
@@ -23,7 +25,7 @@ const SelectBudget = () => {
                 </CardHeader>
                 <CardContent>
                     <ToggleGroup type="single">
-                        {currentUser.budgetCodes.map((code) => {
+                        {userBudgets.map((code) => {
                             return (
                                 <ToggleGroupItem key={"val" + code.id} value={"val" + code.id} variant="outline"> {code.alias} </ToggleGroupItem>
                             );

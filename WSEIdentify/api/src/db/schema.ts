@@ -5,7 +5,6 @@ export const users = sqliteTable("users", {
     firstname: text("first name").notNull(),
     lastname: text("last name").notNull(),
     machinePerm: integer("machine permissions").notNull(),
-    budgetCodes: text("budgetCodes", {mode: "json"}),
     banned: integer("banned").notNull(),
     admin: integer("admin").notNull(),
 });

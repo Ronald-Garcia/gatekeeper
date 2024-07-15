@@ -26,20 +26,6 @@ userRoutes.get("/users/:jid",
     return c.json(user);
 });
 
-userRoutes.get("/users/:jid/budgets",
-  zValidator("param", getUserByJIDSchema),
-  async (c) => {
-
-    const { jid } = c.req.valid("param");
-    const budgets = await db.select().from(userBudgetRelation).where(eq(userBudgetRelation.userId, jid));
-
-    if (!budgets) {
-      throw new HTTPException(404, { message: "No budgets found"});
-    }
-
-    return c.json(budgets);
-  }
-)
 
 userRoutes.delete("/users/:id", 
     zValidator("param", getUserByJIDSchema),

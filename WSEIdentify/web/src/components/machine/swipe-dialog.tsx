@@ -33,10 +33,6 @@ const SwipeDialog = () => {
             if (!user) {
                 throw new Error("Error! User not found!");
             }
-
-            console.log(user.budgetCodes.length);
-            console.log(user);
-            console.log(user.budgetCodes);
             setUser(user);   
             if (user.admin) {
                 toast({
@@ -48,9 +44,6 @@ const SwipeDialog = () => {
                 })
             }
 
-            // if (user.budgetCodes.length === 0) {
-            //     throw new Error("It appears you have no budgets! Please see an admin to add a budget.");
-            // }  
             setCurrentPage(PAGES.BUDGET);
         } catch (err) {
             toast({
