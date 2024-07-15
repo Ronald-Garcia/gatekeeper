@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import userRoutes from './routes/users'
 import machineRoutes from './routes/machines';
 import budgetRoutes from './routes/budget-codes';
-import linkRoutes from './routes/budget-user-links';
+import relationRoutes from './routes/user-budget-relations';
 import { HTTPException } from 'hono/http-exception';
 import { cors } from 'hono/cors';
 const app = new Hono()
@@ -17,7 +17,7 @@ app.get('/', (c) => {
 app.route("/", userRoutes);
 app.route("/", machineRoutes);
 app.route("/", budgetRoutes);
-app.route("/", linkRoutes);
+app.route("/", relationRoutes);
 
 app.onError((err, c) => {
   console.error(`${err}`)

@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import { db } from "../db";
-import { budgetCodes, users } from "../db/schema";
+import { budgetCodes, userBudgetRelation, users } from "../db/schema";
 import { eq, or } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
-import { createUserSchema, updateUserSchema, getUserByJIDSchema } from "../validators/schemas";
+import { createUserSchema, updateUserSchema, getUserByJIDSchema, createBudgetSchema, getBudgetSchema } from "../validators/schemas";
 import { HTTPException } from "hono/http-exception";
 const userRoutes = new Hono();
 
@@ -11,8 +11,7 @@ userRoutes.get("/users",
     async (c) => {
 
     const allUsers = await db.select().from(users);
-    return c.json(allUsers);  
-
+    return c.json(allUsers);
   });
 
 userRoutes.get("/users/:jid", 
@@ -22,10 +21,25 @@ userRoutes.get("/users/:jid",
     const [ user ] = await db.select().from(users).where(eq(users.jid, jid)); 
 
     if (!user) {
-      throw new HTTPException(404, { message: ""}) // HTTP Status code 200 "Ok"
+      throw new HTTPException(404, { message: "User not found"}) // HTTP Status code 200 "Ok"
     }
     return c.json(user);
 });
+
+userRoutes.get("/users/:jid/budgets",
+  zValidator("param", getUserByJIDSchema),
+  async (c) => {
+
+    const { jid } = c.req.valid("param");
+    const budgets = await db.select().from(userBudgetRelation).where(eq(userBudgetRelation.userId, jid));
+
+    if (!budgets) {
+      throw new HTTPException(404, { message: "No budgets found"});
+    }
+
+    return c.json(budgets);
+  }
+)
 
 userRoutes.delete("/users/:id", 
     zValidator("param", getUserByJIDSchema),
@@ -64,24 +78,6 @@ userRoutes.patch("/users/:jid",
       throw new HTTPException(404, { message: "User not found" });
     }
     return c.json(updatedUser);
-  });
-
-userRoutes.patch("/users/:jid/budgets",
-  zValidator("param", getUserByJIDSchema),
-  async (c) => {
-
-    const { jid } = c.req.valid("param");
-
-    const { budget } = await c.req.json();
-
-    const [ link ] = await db
-    .update(users)
-    .values({
-      
-      budget
-    }).returning();
-
-    return c.json(link);
   });
 
 

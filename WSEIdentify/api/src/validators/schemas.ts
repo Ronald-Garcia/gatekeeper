@@ -29,3 +29,11 @@ export const updateBudgetSchema = createBudgetSchema.partial();
 export const getBudgetSchema = z.object({
     id: z.coerce.number().int().positive()
 })
+
+export const getRelationSchema = z.object({
+    jid: z.coerce.number().int().positive(),
+    budgetId: z.coerce.number().int().positive()
+})
+
+export const createRelationSchema = getRelationSchema;
+export const updateRelationSchema = createRelationSchema.partial();

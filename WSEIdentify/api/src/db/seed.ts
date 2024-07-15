@@ -1,5 +1,5 @@
 import { db, connection } from "./index";
-import { users, machinesAvailable, budgetCodes, budgetUserLink } from "./schema";
+import { users, machinesAvailable, budgetCodes, userBudgetRelation } from "./schema";
 
 async function seed() {
   console.log("Seeding the database...");
@@ -9,6 +9,7 @@ async function seed() {
   await db.delete(users);
   await db.delete(machinesAvailable);
   await db.delete(budgetCodes);
+  await db.delete(userBudgetRelation);
 
   console.log("Inserting new seed data...");
   const [budget1] = await db
@@ -103,35 +104,35 @@ async function seed() {
       }).returning( {name: machinesAvailable.name});
 
       const [link1] = await db
-      .insert(budgetUserLink)
+      .insert(userBudgetRelation)
       .values({
         userId: user2.id,
         budgetId: budget2.id
       }).returning();
 
       const [link2] = await db
-      .insert(budgetUserLink)
+      .insert(userBudgetRelation)
       .values({
         userId: user2.id,
         budgetId: budget1.id
       }).returning();
 
       const [link3] = await db
-      .insert(budgetUserLink)
+      .insert(userBudgetRelation)
       .values({
         userId: user1.id,
         budgetId: budget3.id
       }).returning();
 
       const [link4] = await db
-      .insert(budgetUserLink)
+      .insert(userBudgetRelation)
       .values({
         userId: user3.id,
         budgetId: budget2.id
       }).returning();
 
       const [link5] = await db
-      .insert(budgetUserLink)
+      .insert(userBudgetRelation)
       .values({
         userId: user3.id,
         budgetId: budget3.id
