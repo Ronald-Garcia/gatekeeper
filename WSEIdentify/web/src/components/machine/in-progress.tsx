@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
 import Timer from "./timer";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
-import { $budgetCodeUsed } from "@/lib/store";
+import { $budgetCodeUsed, PAGES, setCurrentPage } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "@/components/ui/button";
+import { useToast } from "../ui/use-toast";
 
 const InProgress = () => {
 
     const budgetCode = useStore($budgetCodeUsed);
 
     const [time, setTime] = useState<number>(0);
+    const { toast } = useToast();
 
     useEffect(() => {
         const interval = setInterval(()=> {
@@ -36,7 +38,15 @@ const InProgress = () => {
                         <Timer time={time}></Timer>
                     </p>
                     </CardContent>
-                    <CardFooter className="justify-center">
+                    <CardFooter 
+                        className="justify-center"
+                        onClick={() => {
+                            toast({
+                                title: "Session finished!",
+                                description: "The session was successfully finished, billing information was sent!"
+                            });
+                            setCurrentPage(PAGES.START);
+                        }}>
                         <Button>
                             Tap when finished!
                         </Button>
