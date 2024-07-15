@@ -5,8 +5,26 @@ import { eq, or } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { createUserSchema, updateUserSchema, getUserByJIDSchema, createBudgetSchema, getBudgetSchema } from "../validators/schemas";
 import { HTTPException } from "hono/http-exception";
+
+
+/*
+ ************************************
+ * ROUTE TO HANDLE USER OPERATIONS. *
+ ************************************
+ */
 const userRoutes = new Hono();
 
+
+/*
+ ****************** 
+ * GET OPERATIONS *
+ ******************
+ */
+
+/**
+ * Route to get all users.
+ * @returns all the users stored.
+ */
 userRoutes.get("/users",
     async (c) => {
 
@@ -14,6 +32,11 @@ userRoutes.get("/users",
     return c.json(allUsers);
   });
 
+/**
+ * Route to get a specific user.
+ * @param jid the id of the user.
+ * @returns the user.
+ */
 userRoutes.get("/users/:jid", 
   zValidator("param", getUserByJIDSchema),
   async (c) => {
@@ -27,6 +50,39 @@ userRoutes.get("/users/:jid",
 });
 
 
+/*
+ ******************* 
+ * POST OPERATIONS *
+ *******************
+ */
+
+/**
+ * Route to add a user.
+ * @json the user to add.
+ * @returns the added user.
+ */
+userRoutes.post("/users", 
+  zValidator("json", createUserSchema),
+  async (c) => {
+
+    const body = c.req.valid("json"); 
+    const [ newUser ] = await db.insert(users).values(body).returning();
+
+    return c.json(newUser, 201);  
+  
+});
+
+/*
+ ********************* 
+ * DELETE OPERATIONS *
+ *********************
+ */
+
+/**
+ * Route to delete a specific user.
+ * @param jid the id of the user.
+ * @returns the user that was deleted.
+ */
 userRoutes.delete("/users/:id", 
     zValidator("param", getUserByJIDSchema),
     async (c) => {
@@ -40,17 +96,20 @@ userRoutes.delete("/users/:id",
       return c.json(deletedUser);  
 });
 
-userRoutes.post("/users", 
-  zValidator("json", createUserSchema),
-  async (c) => {
 
-    const body = c.req.valid("json"); 
-    const [ newUser ] = await db.insert(users).values(body).returning();
+/*
+ ******************** 
+ * PATCH OPERATIONS *
+ ********************
+ */
 
-    return c.json(newUser, 201);  
-  
-});
-
+ /**
+  * Route to update a user.
+  * @param jid the id of the user to update.
+  * @json the new data to update.
+  * @returns the updated user.
+  * @throws 404 HTTP exception if user not found.
+  */
 userRoutes.patch("/users/:jid",
   zValidator("param", getUserByJIDSchema),
   zValidator("json", updateUserSchema),

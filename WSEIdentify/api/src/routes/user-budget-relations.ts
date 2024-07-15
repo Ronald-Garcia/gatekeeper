@@ -5,9 +5,27 @@ import { eq, or, and, exists } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { createUserSchema, updateUserSchema, getUserByJIDSchema, createBudgetSchema, getBudgetSchema, getRelationSchema, createRelationSchema, updateRelationSchema } from "../validators/schemas";
 import { HTTPException } from "hono/http-exception";
+
+/*
+ ****************************************
+ * ROUTE TO HANDLE RELATION OPERATIONS. *
+ ****************************************
+ */
 const relationRoutes = new Hono();
 
 
+/*
+ ****************** 
+ * GET OPERATIONS *
+ ******************
+ */
+
+/**
+ * Route to get all the budgets of a user.
+ * @param jid the id of the user.
+ * @returns the budgets that are related to the user.
+ * @throws 404 HTTP Exception if no budgets are found.
+ */
 relationRoutes.get("/users/:jid/budgets",
     zValidator("param", getUserByJIDSchema),
     async (c) => {
@@ -22,7 +40,13 @@ relationRoutes.get("/users/:jid/budgets",
     }
   )
 
-  relationRoutes.get("/budgets/:budgetId/users",
+/**
+ * Route to get all the users assigned to a budget.
+ * @param budgetId the id of the budget.
+ * @returns the users that are related to the budget.
+ * @throws 404 HTTP Exception if no users are found.
+ */
+relationRoutes.get("/budgets/:budgetId/users",
     zValidator("param", getBudgetSchema),
     async (c) => {
       const { id: budgetId } = c.req.valid("param");
@@ -36,6 +60,13 @@ relationRoutes.get("/users/:jid/budgets",
     }
   )
 
+/**
+ * Route to get a specific relation.
+ * @param jid the id of the user.
+ * @param budgetId the id of the budget.
+ * @returns the relation that corresponds to these two elements.
+ * @throws 404 HTTP Exception if no relation was found.
+ */
 relationRoutes.get("/users/:jid/budgets/:budgetId", 
   zValidator("param", getRelationSchema),
   async (c) => {
@@ -48,6 +79,18 @@ relationRoutes.get("/users/:jid/budgets/:budgetId",
     return c.json(relation);
 });
 
+
+/*
+ *******************
+ * POST OPERATIONS *
+ *******************
+ */
+
+/**
+ * Route to add a relation.
+ * @json the relation to add.
+ * @returns the relation that was added.
+ */
 relationRoutes.post("/users/budgets",
     zValidator("json", createRelationSchema),
     async (c) => {
@@ -55,14 +98,24 @@ relationRoutes.post("/users/budgets",
 
         const [ relation ] = await db.insert(userBudgetRelation).values(body).returning();
 
-        if (!relation) {
-            throw new HTTPException(500, {message: "Something went wrong"});
-        }
-
         return c.json(relation);
     }
-)
+);
 
+
+/*
+ *********************
+ * DELETE OPERATIONS *
+ *********************
+ */
+
+/**
+ * Route to delete a relation.
+ * @param userId the id of the user.
+ * @param budgetId the id of the budget.
+ * @returns the budget that was deleted.
+ * @throws 404 HTTP Exception if no relation was found.
+ */
 relationRoutes.delete("/users/:userId/budgets/:budgetId", 
     zValidator("param", getRelationSchema),
     async (c) => {
@@ -76,7 +129,19 @@ relationRoutes.delete("/users/:userId/budgets/:budgetId",
       return c.json(deletedRelation);  
 });
 
-
+/*
+ ********************
+ * PATCH OPERATIONS *
+ ********************
+ */
+/**
+ * ---- NOT USED ----
+ * Route to update a relation.
+ * @param userId the id of the user.
+ * @param budgetId the id of the budget.
+ * @returns the budget that was deleted.
+ * @throws 404 HTTP Exception if no relation was found.
+ */
 relationRoutes.patch("/users/:jid/budgets/:budgetId",
   zValidator("param", getRelationSchema),
   zValidator("json", updateRelationSchema),

@@ -1,5 +1,5 @@
 import { db, connection } from "./index";
-import { users, machinesAvailable, budgetCodes, userBudgetRelation } from "./schema";
+import { users, machinesAvailable, budgetCodes, userBudgetRelation, transactions } from "./schema";
 
 async function seed() {
   console.log("Seeding the database...");
@@ -10,7 +10,9 @@ async function seed() {
   await db.delete(machinesAvailable);
   await db.delete(budgetCodes);
   await db.delete(userBudgetRelation);
+  await db.delete(transactions);
 
+  
   console.log("Inserting new seed data...");
   const [budget1] = await db
       .insert(budgetCodes)

@@ -3,8 +3,25 @@ import { db } from "../db";
 import { machinesAvailable } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
+
+/*
+ ***************************************
+ * ROUTE TO HANDLE MACHINE OPERATIONS. *
+ ***************************************
+ */
+
 const machineRoutes = new Hono();
 
+/*
+ ****************** 
+ * GET OPERATIONS *
+ ******************
+ */
+
+/**
+ * Route to get all machines.
+ * @returns all the machines stored.
+ */
 machineRoutes.get("/machines",
   async (c) => {
     try {

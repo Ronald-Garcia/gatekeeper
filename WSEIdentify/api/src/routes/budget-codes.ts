@@ -4,13 +4,28 @@ import { budgetCodes } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { createBudgetSchema, getBudgetSchema, queryParamsSchema } from "../validators/schemas";
+import { HTTPException } from "hono/http-exception";
+
+
+/*
+ **************************************
+ * ROUTE TO HANDLE BUDGET OPERATIONS. *
+ **************************************
+ */
+
 const budgetRoutes = new Hono();
+
+/*
+ ****************** 
+ * GET OPERATIONS *
+ ******************
+ */
 
 /**
  * Route to get all budgets in the data base.
  * TODO: Add pagination and search functions.
+ * @returns all the budgets in the data base.
  */
-
 budgetRoutes.get("/budgets", 
   zValidator("query", queryParamsSchema),
   async (c) => {
@@ -21,6 +36,12 @@ budgetRoutes.get("/budgets",
     return c.json(allBudgets);  
 });
 
+/**
+ * Route to get a specific budget by id.
+ * @param id the id of the budget to get.
+ * @returns the budget with the id.
+ * @throws an 404 HTTP error if not found.
+ */
 budgetRoutes.get("/budgets/:id", 
   zValidator("param", getBudgetSchema),
   async (c) => {
@@ -31,6 +52,18 @@ budgetRoutes.get("/budgets/:id",
     return c.json(budget);
 });
 
+
+/*
+ *******************
+ * POST OPERATIONS *
+ *******************
+ */
+
+/**
+ * Route to create a new budget.
+ * @json the budget to be added.
+ * @returns the budget that was added.
+ */
 budgetRoutes.post("/budgets", 
   zValidator("json", createBudgetSchema),
   async (c) => {
@@ -38,8 +71,21 @@ budgetRoutes.post("/budgets",
     const [ newBudget ] = await db.insert(budgetCodes).values(body).returning();
     return c.json(newBudget, 201);
   }
-)
+);
 
+
+/*
+ ********************* 
+ * DELETE OPERATIONS *
+ *********************
+ */
+
+/**
+ * Route to delete a specific budget.
+ * @param id the id of the budget to be deleted.
+ * @returns the budget that was deleted.
+ * @throws 404 HTTP error if the budget was not found.
+ */
 budgetRoutes.delete("/budgets/:id",
   zValidator("param", getBudgetSchema),
   async (c) => {
@@ -47,6 +93,10 @@ budgetRoutes.delete("/budgets/:id",
     const { id } = c.req.valid("param");
 
     const [ budget ] = await db.delete(budgetCodes).where(eq(budgetCodes.id, id)).returning();
+
+    if (!budget) {
+      throw new HTTPException(404, { message: "Budget not found."});
+    }
 
     return c.json(budget);
   }
