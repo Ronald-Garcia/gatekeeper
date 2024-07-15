@@ -4,8 +4,7 @@ export interface UserType {
     lastname: string,
     banned: number,
     machinePerm: number,
-    admin: number,
-    budgetCodes: BudgetType[]
+    admin: number
 }
 
 export interface MachineType {
@@ -20,11 +19,7 @@ export interface BudgetType {
     isClass: number
 }
 
-export interface BudgetObjectList {
-    [key: string]: number,
-}
-
-export interface BudgetUserLink {
+export interface RelationType {
     id: number,
     userID: number,
     budgetId: number

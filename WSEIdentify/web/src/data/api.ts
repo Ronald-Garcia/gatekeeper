@@ -1,18 +1,20 @@
 import { API_URL } from "@/env";
-import { BudgetObjectList, BudgetType, BudgetUserLink, MachineType, UserType } from "./types";
+import { BudgetType, RelationType, MachineType, UserType } from "./types";
 
 export const getUserByJID = async (userID: number) => {
     try {
+        
         const result = await fetch(`${API_URL}/users/${userID}`);
+
+
         if (result.status === 404) {
             throw new Error("User is not registered. Please see an admin.");
         } else if (result.status === 500) {
             throw new Error("Something unexpected happened. Please notify an admin and try again later.");
         }
-        const data: UserType = await result.json();
 
-        data.budgetCodes = await getBudgetsFromUser(userID);
-        console.log(data.budgetCodes);
+
+        const data: UserType = await result.json();
         return data;    
     } catch (err) {
         throw err;
@@ -54,10 +56,6 @@ export const addUserToDB = async (newUser: UserType) => {
             },
             body: JSON.stringify(newUser)
         });
-        
-        newUser.budgetCodes.forEach(b => {
-            createBudgetUserLink(newUser.jid, b.id);
-        })
 
         if (!result.ok) {
             throw new Error("Something unexpected happened. Please notify an admin and try again later.");
@@ -213,61 +211,48 @@ export const getBudgetsFromUser = async (userID: number) => {
             throw new Error("Error");
         }
 
-        const data: BudgetObjectList = await result.json();
-
-        const budgetArr: BudgetType[] = [];
-        Object.values(data.data).forEach(async (budget)=> {
-            console.log(budget);
-            const { budgetId } = budget;
-            console.log(budgetId);
-            const b: BudgetType = await getBudgetByID(budgetId);
-            budgetArr.push(b);
-        });
-
-        console.log(budgetArr);
-        return budgetArr;
+        const data: RelationType[] = await result.json();
+        return data;
     } catch (err) {
         throw err;
     }
 }
 
-export const createBudgetUserLink = async (userID: number, budgetID: number) => {
+export const createRelation = async (userID: number, budgetID: number) => {
     try {
-        const result = await fetch(`${API_URL}/users/${userID}/budgets/${budgetID}`);
+        const result = await fetch(`${API_URL}/users/budgets`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ userId: userID, budgetId: budgetID}) 
+            }
+        );
 
         if (!result.ok) { 
-            throw new Error("Errrr");
+            throw new Error("Request was bad, likely because either the budget or user do not exist.");
         }
 
-        const data: BudgetUserLink = await result.json();
+        const data: RelationType = await result.json();
         return data;
     } catch (err) { 
         throw err;
     }
 }
 
-// export const removeBudgetByAlias = async (budgetAlias: number) => {
-//     try {
-//         const result = await fetch(`${API_URL}/budgets/${budgetAlias}`,
-//             {
-//                 method: "DELETE"
-//             }
-//         );
 
-//         if (result.status === 400) {
-//             throw new Error("Budget was bad, likely not an existing budget. To add a budget, use the Add Budget action.");
-//         } else if (result.status === 500) {
-//             throw new Error("Something unexpected happened. Please notify an admin and try again later.");
-//         }
-//         const data: UserType = await result.json();
-        
-//         if (!data || Object.keys(data).includes("message")) {
-//             throw new Error("Budget was bad, likely not an existing budget. To add a budget, use the Add Budget action.");
-//         }
+export const deleteRelation = async (userID: number, budgetID: number) => {
+    try {
+        const result = await fetch(`${API_URL}/users/${userID}/budgets/${budgetID}`);
 
-//         data.budgetCodes = Object.values(data.budgetCodes);
-//         return data;    
-//     } catch (err) {
-//         throw err;
-//     }
-// }
+        if (!result.ok) { 
+            throw new Error("Request was bad, likely because either the budget or user do not exist.");
+        }
+
+        const data: RelationType = await result.json();
+        return data;
+    } catch (err) { 
+        throw err;
+    }
+}

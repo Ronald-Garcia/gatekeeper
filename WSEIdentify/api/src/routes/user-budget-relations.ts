@@ -48,7 +48,7 @@ relationRoutes.get("/users/:jid/budgets/:budgetId",
     return c.json(relation);
 });
 
-relationRoutes.post("/users/budgets/",
+relationRoutes.post("/users/budgets",
     zValidator("json", createRelationSchema),
     async (c) => {
         const body = c.req.valid("json");
