@@ -6,12 +6,11 @@ export const getUserByJID = async (userID: number) => {
         
         const result = await fetch(`${API_URL}/users/${userID}`);
 
-
+        
         if (!result.ok) {
-            const data: { error: string } = await result.json();
+            const data: { message: string } = await result.json();
             throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
         }
-
 
         const data: UserType = await result.json();
 

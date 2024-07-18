@@ -31,7 +31,7 @@ const AddStudentSwipeDialog = () => {
                     }
                 
                 } catch (err) {
-                    if ( (err as Error).message !== "User is not registered. Please see an admin.") {
+                    if ( (err as Error).message !== `Something went wrong!: {"message":"User not found"}`) {
                         throw err;
                     }
                 }

@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { $budgetCodeUsed, $currentUser, PAGES, setBudgetCodeUsed, setCurrentPage } from "@/lib/store";
+import { $currentUser, $newBudget, PAGES, setCurrentPage, setNewBudget } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "@/components/ui/button";
 import StartSessionAlert from "./start-session-alert";
@@ -13,7 +13,7 @@ const SelectBudget = () => {
 
     const [userBudgets, setUserBudgets] = useState<BudgetType[]>([]);
     const currentUser = useStore($currentUser);
-    const budgetToBill = useStore($budgetCodeUsed);
+    const budgetToBill = useStore($newBudget);
 
     const [budgetAdded, setBudgetAdded] = useState<boolean>(false);
 
@@ -41,8 +41,8 @@ const SelectBudget = () => {
                                     value={"val" + code.id} 
                                     variant="outline"
                                     onClick={() => {
-                                        setBudgetAdded(b => (!b && (budgetToBill !== code.id)))
-                                        setBudgetCodeUsed((budgetToBill !== code.id) ? code.id : 0);
+                                        setBudgetAdded(b => (!b && (budgetToBill.id !== code.id)));
+                                        setNewBudget(code);
                                     }}> {code.alias} </ToggleGroupItem>
                             );
                         })}

@@ -16,7 +16,7 @@ export const users = sqliteTable("users", {
     machinePerm: integer("machine permissions").notNull(),
     banned: integer("banned").notNull(),
     admin: integer("admin").notNull(),
-    jhed: text("JHED").notNull()
+    jhed: text("JHED").notNull().unique()
 });
 
 /**
@@ -33,7 +33,7 @@ export const transactions = sqliteTable("transactions", {
     timeSpent: integer("timeSpent").notNull(),
     code: integer("budgetCode").references(() => budgetCodes.id),
     machineUsed: integer("machine").references(()=>machinesAvailable.id, { onDelete: "no action" }),
-    userJid: integer("userJid").references(() => users.jid),
+    userJHED: text("userJHED").references(() => users.jhed),
     date: integer("dateAdded", { mode: "timestamp"}).notNull(),
 });
 

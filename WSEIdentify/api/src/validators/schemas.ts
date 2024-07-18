@@ -67,7 +67,7 @@ export const createTransactionSchema = z.object({
     timeSpent: z.coerce.number(),
     code: z.coerce.number().int().positive(),
     machineUsed: z.coerce.number().int().positive(),
-    userJid: z.coerce.number().int().positive(),
+    userJHED: z.string(),
 });
 
 /*

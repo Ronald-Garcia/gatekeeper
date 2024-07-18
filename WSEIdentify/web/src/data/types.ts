@@ -37,5 +37,5 @@ export interface TransactionType {
     timeSpent: number,
     code: number,
     machineUsed: number,
-    userJid: number
+    userJHED: string
 }

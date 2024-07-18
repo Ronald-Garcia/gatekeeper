@@ -27,7 +27,7 @@ app.onError((err, c) => {
   console.error(`${err}`)
 
   if (err instanceof HTTPException) {
-    return err.getResponse();
+    return c.json({ message: err.message}, 404);
   }
 
   return c.json( {message: 'An unexpected error occurred.'}, 500);

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Timer from "./timer";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
-import { $budgetCodeUsed, $currentUser, PAGES, setCurrentPage } from "@/lib/store";
+import { $currentUser, $newBudget, PAGES, setCurrentPage } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "../ui/use-toast";
@@ -10,7 +10,8 @@ import { addTransactionToDB } from "@/data/api";
 
 const InProgress = () => {
 
-    const budgetCode = useStore($budgetCodeUsed);
+    const newBudget = useStore($newBudget);
+
     const currentUser = useStore($currentUser);
 
     const [time, setTime] = useState<number>(0);
@@ -29,9 +30,9 @@ const InProgress = () => {
         try {
             const transaction: TransactionType = await addTransactionToDB({
                 timeSpent: time,
-                code: budgetCode,
+                code: newBudget.id,
                 machineUsed: 1,
-                userJid: currentUser.jid
+                userJHED: currentUser.jhed
             });
     
             console.log(transaction);
@@ -59,7 +60,7 @@ const InProgress = () => {
                             Time spent
                         </CardTitle>
                         <CardDescription>
-                            Below is the amount of time that will be billed to {budgetCode}.
+                            Below is the amount of time that will be billed to {newBudget.alias}.
                         </CardDescription>
                     </CardHeader>
                 <CardContent>
