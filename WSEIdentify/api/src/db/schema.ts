@@ -62,7 +62,7 @@ export const budgetCodes = sqliteTable("budgetCodes", {
  */
 export const machinesAvailable = sqliteTable("machines", {
     id: integer("id").primaryKey({ autoIncrement: true }),
-    name: text("name").notNull(),
+    name: text("name").notNull().unique(),
     rate: integer("hourly rate").notNull(),
 })
 

@@ -1,5 +1,5 @@
 
-import { BudgetType, RelationType, UserType } from "@/data/types";
+import { BudgetType, MachineType, RelationType, UserType } from "@/data/types";
 import { atom } from "nanostores";
 
 export const PAGES = { 
@@ -182,4 +182,30 @@ export const toggleRelationToDelete = (relation: RelationType) => {
 export const resetRelations = () => {
     $relationsToDelete.set([]);
     $newRelationList.set([]);
+}
+
+
+export const $newMachine = atom<MachineType>({
+    id: -1,
+    name: "",
+    rate: -1
+});
+
+export const setNewMachineName = (name: string) => {
+    $newMachine.get().name = name;
+}
+export const setNewMachineRate = (rate: number) => {
+    $newMachine.get().rate = rate;
+}
+
+export const setNewMachine = (machine: MachineType) => {
+    $newMachine.set(machine);
+}
+
+export const invalidNewMachine = () => {
+    const newMachine = $newMachine.get();
+    const noAliasChosen = (newMachine.name === "")
+    const noRateChosen = (newMachine.rate === -1);
+
+    return noAliasChosen || noRateChosen;
 }

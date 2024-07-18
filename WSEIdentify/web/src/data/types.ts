@@ -20,6 +20,13 @@ export interface BudgetType {
     isClass: number
 }
 
+
+export interface MachineType {
+    id: number,
+    name: string,
+    rate: number,
+}
+
 export interface RelationType {
     id?: number,
     jid: number,

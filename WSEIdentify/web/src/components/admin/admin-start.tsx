@@ -4,6 +4,7 @@ import StudentActons from "./student-actions";
 import { useStore } from "@nanostores/react";
 import { $currentUser } from "@/lib/store";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import MachineActions from "./machine-actions";
 
 const AdminStart = () => {
     const curAdmin = useStore($currentUser)
@@ -21,6 +22,7 @@ const AdminStart = () => {
                 <div className="grid grid-cols-2">
                     <StudentActons></StudentActons>
                     <BudgetActions></BudgetActions>
+                    <MachineActions></MachineActions>
                 </div>
             </CardContent>
 

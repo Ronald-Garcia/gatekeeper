@@ -7,18 +7,14 @@ export const getUserByJID = async (userID: number) => {
         const result = await fetch(`${API_URL}/users/${userID}`);
 
 
-        if (result.status === 404) {
-            throw new Error("User is not registered. Please see an admin.");
-        } else if (result.status === 500) {
-            throw new Error("Something unexpected happened. Please notify an admin and try again later.");
+        if (!result.ok) {
+            const data: { error: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
         }
 
 
         const data: UserType = await result.json();
 
-        if (!data || Object.keys(data).includes("message")) {
-            throw new Error("User was bad, likely not an existing user. To add a user,  the Add Budget action.");
-        }
 
         return data;    
     } catch (err) {
@@ -34,16 +30,11 @@ export const removeUserByJID = async (userID: number) => {
             }
         );
 
-        if (result.status === 400) {
-            throw new Error("Student was bad, likely not an existing student. To add a student, use the Add Student action.");
-        } else if (result.status === 500) {
-            throw new Error("Something unexpected happened. Please notify an admin and try again later.");
+        if (!result.ok) {
+            const data: { error: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
         }
         const data: UserType = await result.json();
-        
-        if (!data || Object.keys(data).includes("message")) {
-            throw new Error("Student was bad, likely not an existing student. To add a student, use the Add Student action.");
-        }
 
         return data;    
     } catch (err) {
@@ -63,14 +54,11 @@ export const addUserToDB = async (newUser: UserType) => {
         });
 
         if (!result.ok) {
-            throw new Error("Something unexpected happened. Please notify an admin and try again later.");
+            const data: { error: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
         }
 
         const data = await result.json();
-
-        if (Object.keys(data).includes("message")) {
-            throw new Error("Student was bad, likely not a unique student. To edit a student, use the Update Student action.");
-        }
 
         return data;
     } catch (err) {
@@ -90,15 +78,12 @@ export const updateUserToDB = async (user: UserType) => {
         });
         
 
-        if (result.status === 500) {
-            throw new Error("Something unexpected happened. Please notify an admin and try again later.");
+        if (!result.ok) {
+            const data: { error: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
         }
 
         const data = await result.json();
-
-        if (Object.keys(data).includes("message")) {
-            throw new Error("Student was bad, likely not a unique student. Make sure the ID being edited to is unique.");
-        }
         return data;
     } catch (err) {
         throw err;
@@ -109,8 +94,9 @@ export const getAllAvailableMachines = async () => {
 
     try {
         const result = await fetch(`${API_URL}/machines`);
-        if (result.status === 500) {
-            throw new Error("Something unexpected happened. Please notify an admin and try again later.");
+        if (!result.ok) {
+            const data: { error: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
         }
         const data: MachineType[] = await result.json();
         return data;
@@ -124,8 +110,9 @@ export const getAllBudgetCodes = async () => {
     try {
         const result = await fetch(`${API_URL}/budgets`);
 
-        if (result.status === 500) {
-            throw new Error("Something unexpected happened. Please notify an admin and try again later.");
+        if (!result.ok) {
+            const data: { error: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
         }
 
         const data: BudgetType[] = await result.json();
@@ -149,7 +136,8 @@ export const addBudgetToDB = async (budget: BudgetType) => {
         );
 
         if (!result.ok) {
-            throw new Error("Budget was not successfully added. Please double check the fields and try again.");
+            const data: { error: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
         }
 
 
@@ -171,7 +159,8 @@ export const getBudgetByID = async (budgetID: number) => {
         const result = await fetch(`${API_URL}/budgets/${budgetID}`);
 
         if (!result.ok) {
-            throw new Error("Budget does not exist");
+            const data: { error: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
         }
 
         const data: BudgetType = await result.json();
@@ -194,8 +183,9 @@ export const removeBudgetByID = async (budgetID: number) => {
         }
         const data: UserType = await result.json();
         
-        if (!data || Object.keys(data).includes("message")) {
-            throw new Error("Budget was bad, likely not an existing budget. To add a budget, use the Add Budget action.");
+        if (!result.ok) {
+            const data: { error: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
         }
 
         return data;    
@@ -232,8 +222,9 @@ export const createRelation = async (userID: number, budgetID: number) => {
             }
         );
 
-        if (!result.ok) { 
-            throw new Error("Request was bad, likely because either the budget or user do not exist.");
+        if (!result.ok) {
+            const data: { error: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
         }
 
         const data: RelationType = await result.json();
@@ -252,8 +243,9 @@ export const deleteRelation = async (userID: number, budgetID: number) => {
             }
         );
 
-        if (!result.ok) { 
-            throw new Error("Request was bad, likely because either the budget or user do not exist.");
+        if (!result.ok) {
+            const data: { error: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
         }
 
         const data: RelationType = await result.json();
@@ -281,4 +273,57 @@ export const addTransactionToDB = async (t: TransactionType) => {
 
     const data: TransactionType = await result.json();
     return data;
+}
+
+export const addMachineToDB = async (name: string, rate: number) => {
+    
+    try {
+
+        console.log(rate);
+        const result = await fetch(`${API_URL}/machines`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name,
+                    rate
+                })
+            }
+        );
+
+        if (!result.ok) {
+            const data: { error: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
+        }
+        
+        const data: MachineType = await result.json();
+        return data;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const removeMachineByName = async (name: string) => {
+
+    try {
+        const result = await fetch(`${API_URL}/machines/${name}`,
+            {
+                method: "DELETE"
+            }
+        )
+
+        if (!result.ok) {
+            const data: { error: string } = await result.json();
+            throw new Error(JSON.stringify(data));
+        }
+
+        const data: MachineType = await result.json();
+
+        return data;
+    } catch (err) {
+        throw err;
+    }
+
 }

@@ -82,3 +82,18 @@ export const queryParamsSchema = z.object({
     limit: z.coerce.number().int().positive().optional(),
   });
   
+
+/*
+ *******************
+ * MACHINE SCHEMAS *
+ *******************
+ */
+
+export const createMachineSchema = z.object({
+    name: z.string().min(1).max(100),
+    rate: z.coerce.number().positive()
+})
+
+export const getMachineByNameSchema = z.object({
+    name: z.string().min(1).max(100),
+})
