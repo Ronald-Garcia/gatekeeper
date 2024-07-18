@@ -2,7 +2,6 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Separator } from "../ui/separator";
-import RemoveBudget from "./remove-budget/remove-budget";
 import AddMachineDialog from "./add-machine/add-machine";
 import RemoveMachine from "./remove-machine/remove-machine";
 

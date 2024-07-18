@@ -5,7 +5,7 @@ import { Input } from "../../ui/input";
 import { ChangeEvent, useState } from "react";
 import { useToast } from "../../ui/use-toast";
 import { useRef } from "react";
-import { removeBudgetByID, removeMachineByName } from "@/data/api";
+import { removeMachineByName } from "@/data/api";
 
 const RemoveMachine = () => {
 
