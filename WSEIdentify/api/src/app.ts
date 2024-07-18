@@ -6,6 +6,7 @@ import relationRoutes from './routes/user-budget-relations';
 import { HTTPException } from 'hono/http-exception';
 import { cors } from 'hono/cors';
 import transactionRoutes from './routes/transactions';
+import overrideTransactionRoutes from './routes/override-transactions';
 const app = new Hono()
 
 // for testing, remove when in production
@@ -21,10 +22,10 @@ app.route("/", machineRoutes);
 app.route("/", budgetRoutes);
 app.route("/", relationRoutes);
 app.route("/", transactionRoutes);
+app.route("/", overrideTransactionRoutes);
 
 // error handling
 app.onError((err, c) => {
-  console.error(`${err}`)
 
   if (err instanceof HTTPException) {
     return c.json({ message: err.message}, 404);

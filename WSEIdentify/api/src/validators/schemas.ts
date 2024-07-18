@@ -70,6 +70,12 @@ export const createTransactionSchema = z.object({
     userJHED: z.string(),
 });
 
+export const createOverrideTransactionSchema = z.object({
+    timeSpent: z.coerce.number(),
+    machineUsed: z.coerce.number().int().positive(),
+    userJid: z.coerce.number(),
+    date: z.coerce.date(),
+});
 /*
  *****************
  * QUERY SCHEMAS *

@@ -1,12 +1,14 @@
 import { API_URL } from "@/env";
-import { BudgetType, RelationType, MachineType, UserType, TransactionType } from "./types";
+import { BudgetType, RelationType, MachineType, UserType, TransactionType, OverrideTransactionType } from "./types";
 
 export const getUserByJID = async (userID: number) => {
     try {
         
         const result = await fetch(`${API_URL}/users/${userID}`);
 
-        
+        if (result.status === 500) {
+            throw new Error("Internal server error! Would you like to enable override?");
+        }
         if (!result.ok) {
             const data: { message: string } = await result.json();
             throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
@@ -324,5 +326,34 @@ export const removeMachineByName = async (name: string) => {
     } catch (err) {
         throw err;
     }
+}
 
+export const addAllOverrideTransactions = async (transactions: OverrideTransactionType[]) => {
+
+    try {
+        
+        transactions.map(async t => {
+            console.log(JSON.stringify(t));
+            const result = await fetch(`${API_URL}/otransactions`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(t)
+                }
+            )
+        
+            if (!result.ok) {
+                const data: { error: string } = await result.json();
+                throw new Error(JSON.stringify(data));
+            }
+    
+            const data: OverrideTransactionType = await result.json();
+    
+            return data;
+        })
+    } catch (err) {
+        throw err;
+    }
 }

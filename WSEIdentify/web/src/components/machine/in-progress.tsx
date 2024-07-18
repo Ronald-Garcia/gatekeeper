@@ -5,7 +5,6 @@ import { $currentUser, $newBudget, PAGES, setCurrentPage } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "../ui/use-toast";
-import { TransactionType } from "@/data/types";
 import { addTransactionToDB } from "@/data/api";
 
 const InProgress = () => {
@@ -28,14 +27,12 @@ const InProgress = () => {
 
     const onSubmit = async () => {
         try {
-            const transaction: TransactionType = await addTransactionToDB({
+            await addTransactionToDB({
                 timeSpent: time,
                 code: newBudget.id,
                 machineUsed: 1,
                 userJHED: currentUser.jhed
             });
-    
-            console.log(transaction);
             
             toast({
                 title: "Session finished!",
@@ -64,9 +61,9 @@ const InProgress = () => {
                         </CardDescription>
                     </CardHeader>
                 <CardContent>
-                    <p className="flex justify-center font-bold text-5xl">
+                    <div className="flex justify-center font-bold text-5xl">
                         <Timer time={time}></Timer>
-                    </p>
+                    </div>
                     </CardContent>
                     <CardFooter 
                         className="justify-center"

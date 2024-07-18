@@ -1,5 +1,5 @@
 
-import { BudgetType, MachineType, RelationType, UserType } from "@/data/types";
+import { BudgetType, MachineType, OverrideTransactionType, RelationType, UserType } from "@/data/types";
 import { atom } from "nanostores";
 
 export const PAGES = { 
@@ -9,7 +9,8 @@ export const PAGES = {
     ADMIN_START: 3,
     ADMIN_ADD_STUDENT: 4,
     ADMIN_UPDATE_STUDENT: 5,
-    ADMIN_ADD_BUDGET: 6
+    ADMIN_ADD_BUDGET: 6,
+    IPO: 7,
 }
 
 
@@ -208,4 +209,14 @@ export const invalidNewMachine = () => {
     const noRateChosen = (newMachine.rate === -1);
 
     return noAliasChosen || noRateChosen;
+}
+
+export const $overrideTransaction = atom<OverrideTransactionType[]>([]);
+
+export const addOverride = (t: OverrideTransactionType) => {
+    $overrideTransaction.set([...$overrideTransaction.get(), t]);
+}
+
+export const emptyOverride = () => {
+    $overrideTransaction.set([]);
 }

@@ -39,3 +39,10 @@ export interface TransactionType {
     machineUsed: number,
     userJHED: string
 }
+
+export interface OverrideTransactionType {
+    timeSpent: number,
+    machineUsed: number,
+    userJid: number,
+    date: Date,
+}

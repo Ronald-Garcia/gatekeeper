@@ -7,6 +7,7 @@ import AdminStart from "./admin/admin-start";
 import AddStudent from "./admin/add-student/add-student";
 import UpdateStudent from "./admin/update-student/update-student";
 import AddBudget from "./admin/add-budget-code/add-budget";
+import InProgressOverride from "./machine/in-progress-override";
 
 
 const Body = () => {
@@ -21,6 +22,7 @@ const Body = () => {
             {(curPage === PAGES.ADMIN_ADD_STUDENT) && <AddStudent></AddStudent>}
             {(curPage === PAGES.ADMIN_UPDATE_STUDENT) && <UpdateStudent></UpdateStudent>}
             {(curPage === PAGES.ADMIN_ADD_BUDGET) && <AddBudget></AddBudget>}
+            {(curPage === PAGES.IPO) && <InProgressOverride></InProgressOverride>}
         </div>
     );
 }

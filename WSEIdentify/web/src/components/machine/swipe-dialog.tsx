@@ -8,11 +8,11 @@ import {
     DialogTrigger
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { $userJID, PAGES, setCurrentPage, setUserJID } from "@/lib/store";
+import { $overrideTransaction, $userJID, emptyOverride, PAGES, setCurrentPage, setUserJID } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 import { useStore } from "@nanostores/react";
-import { getUserByJID } from "@/data/api"; 
+import { addAllOverrideTransactions, getUserByJID } from "@/data/api"; 
 import { setUser } from "@/lib/store";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
@@ -21,7 +21,8 @@ const SwipeDialog = () => {
     const { toast } = useToast();
 
     const userJID = useStore($userJID);
-    
+    const overrideTransactions = useStore($overrideTransaction);
+
     const closeButton = useRef(null);
     const handleKeyboard = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUserJID((e.target as HTMLInputElement).value);
@@ -30,6 +31,10 @@ const SwipeDialog = () => {
     const submitJHID = async () => {
         try {
             const user = await getUserByJID(userJID);
+            if (overrideTransactions) {
+                await addAllOverrideTransactions(overrideTransactions);
+                emptyOverride();
+            }
             if (!user) {
                 throw new Error("Error! User not found!");
             }
@@ -39,18 +44,27 @@ const SwipeDialog = () => {
                     title: "Admin detected.",
                     description: "Would you like to open the admin page?",
                     action: (
-                        <ToastAction altText="Confirm" onClick={()=> {setCurrentPage(PAGES.ADMIN_START)}}>Yes!</ToastAction>
+                        <ToastAction altText="Confirm" onClick={()=> {setCurrentPage(PAGES.IPO)}}>Yes!</ToastAction>
                     )
                 })
             }
 
             setCurrentPage(PAGES.BUDGET);
         } catch (err) {
-            toast({
-                variant: "destructive",
-                description: (err as Error).message,
-                title: "Uh oh! Something went wrong! 😔"
-            })
+            if ((err as Error).message === "Failed to fetch") {
+                toast({
+                    variant: "destructive",
+                    description: "There seems to be a server issue, so I am unable to confirm your identity. Would you like to enter override mode? Your JID will still be stored.",
+                    title: "No wifi detected! 😔",
+                    action: <ToastAction altText="Override" onClick={() => {setCurrentPage(PAGES.IPO)}}>Yes!</ToastAction>
+                });
+            } else {
+                toast({
+                    variant: "destructive",
+                    description: (err as Error).message,
+                    title: "Uh oh! Something went wrong! 😔",
+                });    
+            }
         }
     }
 

@@ -29,13 +29,31 @@ export const users = sqliteTable("users", {
  * @column date the date the transaction was made.
  */
 export const transactions = sqliteTable("transactions", {
-    id: integer("id").primaryKey(),
+    id: integer("id").primaryKey({ autoIncrement: true}),
     timeSpent: integer("timeSpent").notNull(),
     code: integer("budgetCode").references(() => budgetCodes.id),
     machineUsed: integer("machine").references(()=>machinesAvailable.id, { onDelete: "no action" }),
     userJHED: text("userJHED").references(() => users.jhed),
     date: integer("dateAdded", { mode: "timestamp"}).notNull(),
 });
+
+
+/**
+ * The sqlite table to store all the transactions made by accounts in the interlock system.
+ * @primary id the id of the transaction.
+ * @column timeSpent the time spent.
+ * @foreign machineUsed the machine that was used.
+ * @foreign userJid the JID of the account that made the transaction.
+ * @column date the date the transaction was made.
+ */
+export const overrideTransactions = sqliteTable("override_transactions", {
+    id: integer("id").primaryKey({ autoIncrement: true}),
+    timeSpent: integer("timeSpent").notNull(),
+    machineUsed: integer("machine").references(()=>machinesAvailable.id, { onDelete: "no action" }),
+    userJid: integer("userJid").notNull(),
+    date: integer("dateAdded", { mode: "timestamp"}).notNull(),
+});
+
 
 
 /**
