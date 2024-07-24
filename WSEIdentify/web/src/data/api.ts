@@ -1,6 +1,10 @@
 import { API_URL } from "@/env";
 import { BudgetType, RelationType, MachineType, UserType, TransactionType, OverrideTransactionType } from "./types";
 
+export const turnOnMachine = async () => {
+    
+}
+
 export const getUserByJID = async (userID: number) => {
     try {
         
@@ -330,10 +334,8 @@ export const removeMachineByName = async (name: string) => {
 
 export const addAllOverrideTransactions = async (transactions: OverrideTransactionType[]) => {
 
-    try {
-        
+    try {       
         transactions.map(async t => {
-            console.log(JSON.stringify(t));
             const result = await fetch(`${API_URL}/otransactions`,
                 {
                     method: "POST",

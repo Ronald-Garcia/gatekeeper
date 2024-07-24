@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import { db } from "../db";
-import { machinesAvailable, transactions } from "../db/schema";
+import { machinesAvailable, overrideTransactions, transactions } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
-import { createTransactionSchema } from "../validators/schemas";
+import { createOverrideTransactionSchema, createTransactionSchema } from "../validators/schemas";
 
 /*
  *******************************************
@@ -11,7 +11,7 @@ import { createTransactionSchema } from "../validators/schemas";
  *******************************************
  */
 
-const transactionRoutes = new Hono();
+const overrideTransactionRoutes = new Hono();
 
 /*
  ****************** 
@@ -24,11 +24,12 @@ const transactionRoutes = new Hono();
  * Route to get all transactions.
  * @returns all the transactions stored.
  */
-transactionRoutes.get("/transactions",
+overrideTransactionRoutes.get("/otransactions",
   async (c) => {
-    const allTransactions = await db.select().from(transactions);
+    const allTransactions = await db.select().from(overrideTransactions);
     return c.json(allTransactions);  
 });
+
 
 
 /*
@@ -42,15 +43,15 @@ transactionRoutes.get("/transactions",
  * @json the transaction to add.
  * @returns the transaction that was added.
  */
-transactionRoutes.post("/transactions", 
-    zValidator("json", createTransactionSchema),
+overrideTransactionRoutes.post("/otransactions", 
+    zValidator("json", createOverrideTransactionSchema),
     async (c) => {
 
         const body = c.req.valid("json");
 
-        const [ addedTransaction ] = await db.insert(transactions).values({ ...body, date: new Date() }).returning();
+        const [ addedTransaction ] = await db.insert(overrideTransactions).values({ ...body }).returning();
 
         return c.json(addedTransaction);
 });
 
-export default transactionRoutes;
+export default overrideTransactionRoutes;

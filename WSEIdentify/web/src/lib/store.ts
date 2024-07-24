@@ -118,6 +118,15 @@ export const $newBudget = atom<BudgetType>({
     isClass: 0
 });
 
+export const resetNewBudget = () => {
+    $newBudget.set({
+        id: -1,
+        alias: "",
+        isSeniorDesign: 0,
+        isLab: 0,
+        isClass: 0
+    });
+}
 export const setNewBudgetId = (newId: string) => {
     try {
         const actualID = parseInt(newId);

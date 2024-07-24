@@ -125,8 +125,5 @@ userRoutes.patch("/users/:jid",
     return c.json(updatedUser);
   });
 
-
-
-
   export default userRoutes;
 

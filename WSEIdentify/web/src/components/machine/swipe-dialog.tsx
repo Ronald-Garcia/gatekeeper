@@ -44,7 +44,7 @@ const SwipeDialog = () => {
                     title: "Admin detected.",
                     description: "Would you like to open the admin page?",
                     action: (
-                        <ToastAction altText="Confirm" onClick={()=> {setCurrentPage(PAGES.IPO)}}>Yes!</ToastAction>
+                        <ToastAction altText="Confirm" onClick={()=> {setCurrentPage(PAGES.ADMIN_START)}}>Yes!</ToastAction>
                     )
                 })
             }

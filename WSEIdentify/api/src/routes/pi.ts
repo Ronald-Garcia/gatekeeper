@@ -5,14 +5,14 @@ import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { createMachineSchema, getMachineByNameSchema } from "../validators/schemas";
 import { HTTPException } from "hono/http-exception";
-
+import { exec, execSync, spawnSync } from "child_process";
 /*
- ***************************************
- * ROUTE TO HANDLE MACHINE OPERATIONS. *
- ***************************************
+ **********************************
+ * ROUTE TO HANDLE PI OPERATIONS. *
+ **********************************
  */
 
-const machineRoutes = new Hono();
+const piRoutes = new Hono();
 
 /*
  ****************** 
@@ -21,21 +21,40 @@ const machineRoutes = new Hono();
  */
 
 /**
- * Route to get all machines.
- * @returns all the machines stored.
+ * Route to send a signal to turn on this current machine.
+ * @returns true if successful.
  */
-machineRoutes.get("/machines",
+piRoutes.get("/unlock",
   async (c) => {
-    const allMachines = await db.select().from(machinesAvailable);
-    return c.json(allMachines);  
+    const success = await execSync("python ./pi-operations/unlock.py")
+    const stringResult = success.toString().trim();
+    return await c.json({
+        success: stringResult.startsWith('s'),
+        message: stringResult.split(":")[1]
+    })
 });
+
+/**
+ * Route to send a signal to turn on this current machine.
+ * @returns true if successful.
+ */
+piRoutes.get("/lock",
+    async (c) => {
+      const success = await execSync("python ./pi-operations/lock.py")
+      const stringResult = success.toString().trim();
+      return await c.json({
+          success: stringResult.startsWith('s'),
+          message: stringResult.split(":")[1]
+      })
+  });
+  
 
 /*
  *********************
  * DELETE OPERATIONS * 
  ********************* 
  */
-machineRoutes.delete("/machines/:name",
+piRoutes.delete("/machines/:name",
   zValidator("param", getMachineByNameSchema),
   async (c) => {
     const { name } = c.req.valid("param");
@@ -54,7 +73,7 @@ machineRoutes.delete("/machines/:name",
  * POST OPERATIONS * 
  ******************* 
  */
-machineRoutes.post("/machines",
+piRoutes.post("/machines",
   zValidator("json", createMachineSchema),
   async (c) => {
     const body = c.req.valid("json");
@@ -66,4 +85,4 @@ machineRoutes.post("/machines",
 );
 
 
-export default machineRoutes;
+export default piRoutes;

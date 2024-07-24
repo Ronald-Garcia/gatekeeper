@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { $currentUser, $newBudget, PAGES, setCurrentPage, setNewBudget } from "@/lib/store";
+import { $currentUser, $newBudget, PAGES, resetNewBudget, setCurrentPage, setNewBudget } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "@/components/ui/button";
 import StartSessionAlert from "./start-session-alert";
@@ -19,7 +19,12 @@ const SelectBudget = () => {
 
     useEffect(() => {
         getBudgetsFromUser(currentUser.jid).then(budgets => setUserBudgets(budgets));
+        resetNewBudget();
     }, [])
+
+    useEffect(()=> {
+        console.log(budgetAdded);
+    }, [budgetAdded]);
 
     return (
         <>
@@ -40,8 +45,8 @@ const SelectBudget = () => {
                                     key={"val" + code.id} 
                                     value={"val" + code.id} 
                                     variant="outline"
-                                    onClick={() => {
-                                        setBudgetAdded(b => (!b && (budgetToBill.id !== code.id)));
+                                    onClick={async () => {
+                                        await setBudgetAdded(b => budgetToBill.id !== code.id || (budgetToBill.id === code.id && !b));
                                         setNewBudget(code);
                                     }}> {code.alias} </ToggleGroupItem>
                             );
