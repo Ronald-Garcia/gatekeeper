@@ -10,7 +10,6 @@ export const createUserSchema = z.object({
     jid: z.coerce.number().nonnegative().int(),
     firstname: z.string().min(1, "First name is required"),
     lastname: z.string().min(1, "Last name is required"),
-    machinePerm: z.coerce.number().int().max(0x1111, "Invalid permissions number.").nonnegative(),
     banned: z.coerce.number().int().min(0).max(1),
     admin: z.coerce.number().int().min(0).max(1),
     jhed: z.string().min(1, "JHED is required"),
@@ -49,13 +48,22 @@ export const getBudgetSchema = z.object({
  ********************
  */
 
-export const getRelationSchema = z.object({
+export const getBudgetRelationSchema = z.object({
     userId: z.coerce.number().int().positive(),
     budgetId: z.coerce.number().int().positive()
 })
 
-export const createRelationSchema = getRelationSchema;
-export const updateRelationSchema = createRelationSchema.partial();
+export const createBudgetRelationSchema = getBudgetRelationSchema;
+export const updateBudgetRelationSchema = createBudgetRelationSchema.partial();
+
+export const getMachineRelationSchema = z.object({
+    userId: z.coerce.number().int().positive(),
+    machineId: z.coerce.number().int().positive()
+})
+
+export const createMachineRelationSchema = getMachineRelationSchema;
+export const updateMachineRelationSchema = createMachineRelationSchema.partial();
+
 
 /*
  ***********************
@@ -102,4 +110,8 @@ export const createMachineSchema = z.object({
 
 export const getMachineByNameSchema = z.object({
     name: z.string().min(1).max(100),
+})
+
+export const getMachineById = z.object({
+    machineId: z.coerce.number().int().positive()
 })

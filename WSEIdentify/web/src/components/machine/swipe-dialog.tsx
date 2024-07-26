@@ -12,10 +12,11 @@ import { $overrideTransaction, $userJID, emptyOverride, PAGES, setCurrentPage, s
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 import { useStore } from "@nanostores/react";
-import { addAllOverrideTransactions, getUserByJID } from "@/data/api"; 
+import { addAllOverrideTransactions, getMachinesFromUser, getUserByJID } from "@/data/api"; 
 import { setUser } from "@/lib/store";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import { MACHINE_NAME } from "@/env";
 const SwipeDialog = () => {
 
     const { toast } = useToast();
@@ -47,7 +48,18 @@ const SwipeDialog = () => {
                         <ToastAction altText="Confirm" onClick={()=> {setCurrentPage(PAGES.ADMIN_START)}}>Yes!</ToastAction>
                     )
                 })
+            } else {
+                const userMachines = await getMachinesFromUser(user.jid);
+                console.log(MACHINE_NAME);
+    
+                const hasAccess = userMachines.some(m => m.name === MACHINE_NAME);
+    
+                if (!hasAccess) {
+                    throw new Error("It appears you do not have permission to access this machine. Receive training or contact admins to update permissions!")
+                }    
             }
+            
+            
 
             setCurrentPage(PAGES.BUDGET);
         } catch (err) {

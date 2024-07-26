@@ -30,6 +30,13 @@ machineRoutes.get("/machines",
     return c.json(allMachines);  
 });
 
+machineRoutes.get("/machines/:name",
+  zValidator("param", getMachineByNameSchema),
+  async (c) => {
+    const machine = await db.select().from(machinesAvailable).get();
+    return c.json(machine);  
+});
+
 /*
  *********************
  * DELETE OPERATIONS * 

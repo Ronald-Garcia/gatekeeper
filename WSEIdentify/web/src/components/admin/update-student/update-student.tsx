@@ -1,13 +1,13 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "../../ui/input";
 import { Checkbox } from "../../ui/checkbox";
-import { getAllAvailableMachines, getAllBudgetCodes, getBudgetsFromUser } from "@/data/api";
+import { getAllAvailableMachines, getAllBudgetCodes, getBudgetsFromUser, getMachinesFromUser } from "@/data/api";
 import { useToast } from "../../ui/use-toast";
 import { useState, useEffect } from "react";
 import { BudgetType, MachineType } from "@/data/types";
 import { Separator } from "../../ui/separator";
 import { ChangeEvent } from "react";
-import { $currentUser, $newRelationList, $newUser, $relationsToDelete, PAGES, resetRelations, setCurrentPage, setNewUserAdmin, setNewUserFirstName, setNewUserLastName, setNewUserMachinePerms, toggleRelation, toggleRelationToDelete } from "@/lib/store";
+import { $currentUser, $newUser, PAGES, resetBudgetRelations, setCurrentPage, setNewUserAdmin, setNewUserFirstName, setNewUserLastName, toggleBudgetRelation, toggleBudgetRelationToDelete, toggleMachineRelationToDelete, toggleMachineRelation } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "../../ui/button";
 import UpdateStudentConfirmation from "./update-student-confirmation";
@@ -16,15 +16,12 @@ const UpdateStudent = () => {
 
     const newUser = useStore($newUser);
     const currentUser = useStore($currentUser);
-    const newRelations = useStore($newRelationList);
-    const relationsToDelete = useStore($relationsToDelete);
-
-
 
     const { toast } = useToast();
     const [ allAvalableMachines, setAllAvailableMachines ] = useState<MachineType[]>([]);
     const [ allBudgets, setAllBudgets ] = useState<BudgetType[]>([]);
     const [ userBudgets, setUserBudgets ] = useState<BudgetType[]>([]); 
+    const [ userMachines, setUserMachines ] = useState<MachineType[]>([]); 
     const onChangeFirstName = (e: ChangeEvent<HTMLInputElement>) => {
         setNewUserFirstName(e.target.value);
     }
@@ -73,7 +70,8 @@ const UpdateStudent = () => {
         renderAllAvailableMachines();
         renderAllBudgets();
         getBudgetsFromUser(newUser.jid).then(budgets => setUserBudgets(budgets));
-        resetRelations();
+        resetBudgetRelations();
+        getMachinesFromUser(newUser.jid).then(machines => setUserMachines(machines));
     }, []);
 
     return (
@@ -94,7 +92,7 @@ const UpdateStudent = () => {
                             Student's Identification
                         </p>
                         <p className="text-[9pt] italic">
-                            Input a new name or JID if they are to be changed.
+                            Input a new name if they are to be changed.
                         </p>
                     </div>
 
@@ -131,23 +129,39 @@ const UpdateStudent = () => {
                             </label>
                             {(newUser.jid === currentUser.jid) && <p className="text-sm italic leading-none">You cannot change your own admin status! Please use another admin account.</p>}
                         </div>
-                        {allAvalableMachines.map((machine, i)=> {
+                        {allAvalableMachines.map((machine)=> {
+                                const alreadyHave = userMachines.some(b => b.id === machine.id);
                                 return (
-                                    <div key={`div for ${machine.name}`} className="flex items-center space-x-2">
-                                        <Checkbox 
-                                        key={machine.name} 
-                                        id={machine.name} 
-                                        defaultChecked={(newUser.machinePerm & (1 << i)) === (1 << i)}
-                                        className="transition-all"
-                                        onCheckedChange={() => {
-                                            setNewUserMachinePerms(newUser.machinePerm ^ (1 << i));
-                                        }}> </Checkbox>
-                                    <label
-                                key={`label for ${machine.name}`}
-                                htmlFor={machine.name}
-                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                    Permissions for {machine.name}?
-                                </label>
+                                    <div key={`div for ${machine.id}`} className="flex items-center space-x-2">
+        
+                                        {alreadyHave ? <Checkbox
+                                            key={machine.name} 
+                                            id={`${machine.id}`}
+                                            defaultChecked={alreadyHave}
+                                            className="transition-all"
+                                            onCheckedChange={() => {
+                                                toggleMachineRelationToDelete({ jid: newUser.jid, machineId: machine.id });
+                                            }}
+                                            >
+                                        </Checkbox> 
+                                        : 
+                                        <Checkbox
+                                            key={machine.name} 
+                                            id={`${machine.id}`}
+                                            defaultChecked={alreadyHave}
+                                            className="transition-all"
+                                            onCheckedChange={() => {
+                                                toggleMachineRelation({ jid: newUser.jid, machineId: machine.id });
+                                            }}
+                                            >
+                                        </Checkbox>}        
+                                        <label
+                                            key={`label for ${machine.id}`}
+                                            htmlFor={`${machine.id}`}
+                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                                Permissions for {machine.name}?
+                                        </label>
+        
                         </div>
                     );
                         })}
@@ -172,10 +186,7 @@ const UpdateStudent = () => {
                                     defaultChecked={alreadyHave}
                                     className="transition-all"
                                     onCheckedChange={() => {
-                                        toggleRelationToDelete({ jid: newUser.jid, budgetId: budget.id });
-                                        console.log("im here, updating and deleting");
-                                        console.log(newRelations);
-                                        console.log(relationsToDelete);
+                                        toggleBudgetRelationToDelete({ jid: newUser.jid, budgetId: budget.id });
                                     }}
                                     >
                                 </Checkbox> 
@@ -186,9 +197,7 @@ const UpdateStudent = () => {
                                     defaultChecked={alreadyHave}
                                     className="transition-all"
                                     onCheckedChange={() => {
-                                        toggleRelation({ jid: newUser.jid, budgetId: budget.id });
-                                        console.log("im here, updating");
-                                        console.log(newRelations);
+                                        toggleBudgetRelation({ jid: newUser.jid, budgetId: budget.id });
                                     }}
                                     >
                                 </Checkbox>}        

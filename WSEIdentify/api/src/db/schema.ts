@@ -13,7 +13,6 @@ export const users = sqliteTable("users", {
     jid: integer("jid").primaryKey(),
     firstname: text("first name").notNull(),
     lastname: text("last name").notNull(),
-    machinePerm: integer("machine permissions").notNull(),
     banned: integer("banned").notNull(),
     admin: integer("admin").notNull(),
     jhed: text("JHED").notNull().unique()
@@ -96,6 +95,22 @@ export const userBudgetRelation = sqliteTable("userBudgetRelation", {
         onDelete: "cascade"
     }),
     budgetId: integer("budgetId").references(()=>budgetCodes.id, {
+        onDelete: "cascade"
+    })
+})
+
+/**
+ * The sqlite join table to relate users and budgets.
+ * @primary id the id of the relation.
+ * @foreign userId the id of the account that is referenced.
+ * @foreign machineId the id of the machine that is referenced.
+ */
+export const userMachineRelation = sqliteTable("userMachineRelation", {
+    id: integer("relationId").primaryKey({autoIncrement: true}),
+    userId: integer("userId").references(()=>users.jid, {
+        onDelete: "cascade"
+    }),
+    machineId: integer("machineId").references(()=>machinesAvailable.id, {
         onDelete: "cascade"
     })
 })

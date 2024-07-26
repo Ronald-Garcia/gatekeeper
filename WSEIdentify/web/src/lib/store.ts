@@ -1,5 +1,5 @@
 
-import { BudgetType, MachineType, OverrideTransactionType, RelationType, UserType } from "@/data/types";
+import { BudgetType, MachineType, OverrideTransactionType, BudgetRelationType, UserType, MachineRelationType } from "@/data/types";
 import { atom } from "nanostores";
 
 export const PAGES = { 
@@ -36,7 +36,6 @@ export const $currentUser = atom<UserType>({
         firstname: "",
         lastname: "",
         banned: 0,
-        machinePerm: 0,
         admin: 0,
         jhed: ""
     }
@@ -58,7 +57,6 @@ export const $newUser = atom<UserType>({
     firstname: "",
     lastname: "",
     banned: 0,
-    machinePerm: 0,
     admin: 0,
     jhed: ""
 });
@@ -82,10 +80,6 @@ export const setNewUserFirstName = (firstName: string) => {
 
 export const setNewUserLastName = (lastName: string) => {
     $newUser.get().lastname = lastName;
-}
-
-export const setNewUserMachinePerms = (machinePerms: number) => {
-    $newUser.get().machinePerm = machinePerms;
 }
 
 export const setNewUserAdmin = (admin: number) => {
@@ -159,39 +153,39 @@ export const invalidNewBudget = () => {
     return noAliasChosen || noIDChosen || noTypeChosen;
 }
 
-export const $newRelationList = atom<RelationType[]>([]);
+export const $newBudgetRelationList = atom<BudgetRelationType[]>([]);
 
-export const toggleRelation = (relation: RelationType) => {
+export const toggleBudgetRelation = (relation: BudgetRelationType) => {
 
-    const relationExists = $newRelationList.get().some(r => (r.budgetId === relation.budgetId && r.jid === relation.jid));
+    const relationExists = $newBudgetRelationList.get().some(r => (r.budgetId === relation.budgetId && r.jid === relation.jid));
 
     if (!relationExists) {
-        $newRelationList.get().push(relation);
+        $newBudgetRelationList.get().push(relation);
     } else {
-        $newRelationList.set($newRelationList.get().filter(r => (r.budgetId !== relation.budgetId || r.jid !== relation.jid)));
+        $newBudgetRelationList.set($newBudgetRelationList.get().filter(r => (r.budgetId !== relation.budgetId || r.jid !== relation.jid)));
     }
 } 
 
-export const setRelationList = (r: RelationType[]) => {
-    $newRelationList.set(r);
+export const setBudgetRelationList = (r: BudgetRelationType[]) => {
+    $newBudgetRelationList.set(r);
 }
 
-export const $relationsToDelete = atom<RelationType[]>([]);
+export const $budgetRelationsToDelete = atom<BudgetRelationType[]>([]);
 
-export const toggleRelationToDelete = (relation: RelationType) => {
+export const toggleBudgetRelationToDelete = (relation: BudgetRelationType) => {
     
-    const relationExists = $relationsToDelete.get().some(r => (r.budgetId === relation.budgetId && r.jid === relation.jid));
+    const relationExists = $budgetRelationsToDelete.get().some(r => (r.budgetId === relation.budgetId && r.jid === relation.jid));
 
     if (!relationExists) {
-        $relationsToDelete.get().push(relation);
+        $budgetRelationsToDelete.get().push(relation);
     } else {
-        $relationsToDelete.set($relationsToDelete.get().filter(r => (r.budgetId !== relation.budgetId || r.jid !== relation.jid)));
+        $budgetRelationsToDelete.set($budgetRelationsToDelete.get().filter(r => (r.budgetId !== relation.budgetId || r.jid !== relation.jid)));
     }
 }
 
-export const resetRelations = () => {
-    $relationsToDelete.set([]);
-    $newRelationList.set([]);
+export const resetBudgetRelations = () => {
+    $budgetRelationsToDelete.set([]);
+    $newBudgetRelationList.set([]);
 }
 
 
@@ -218,6 +212,41 @@ export const invalidNewMachine = () => {
     const noRateChosen = (newMachine.rate === -1);
 
     return noAliasChosen || noRateChosen;
+}
+
+export const $newMachineRelationList = atom<MachineRelationType[]>([]);
+
+export const toggleMachineRelation = (relation: MachineRelationType) => {
+
+    const relationExists = $newMachineRelationList.get().some(r => (r.machineId === relation.machineId && r.jid === relation.jid));
+
+    if (!relationExists) {
+        $newMachineRelationList.get().push(relation);
+    } else {
+        $newMachineRelationList.set($newMachineRelationList.get().filter(r => (r.machineId !== relation.machineId || r.jid !== relation.jid)));
+    }
+} 
+
+export const setMachineRelationList = (r: MachineRelationType[]) => {
+    $newMachineRelationList.set(r);
+}
+
+export const $machineRelationsToDelete = atom<MachineRelationType[]>([]);
+
+export const toggleMachineRelationToDelete = (relation: MachineRelationType) => {
+    
+    const relationExists = $machineRelationsToDelete.get().some(r => (r.machineId === relation.machineId && r.jid === relation.jid));
+
+    if (!relationExists) {
+        $machineRelationsToDelete.get().push(relation);
+    } else {
+        $machineRelationsToDelete.set($machineRelationsToDelete.get().filter(r => (r.machineId !== relation.machineId || r.jid !== relation.jid)));
+    }
+}
+
+export const resetMachineRelations = () => {
+    $machineRelationsToDelete.set([]);
+    $newMachineRelationList.set([]);
 }
 
 export const $overrideTransaction = atom<OverrideTransactionType[]>([]);

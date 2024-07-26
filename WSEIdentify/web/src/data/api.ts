@@ -1,5 +1,5 @@
 import { API_URL } from "@/env";
-import { BudgetType, RelationType, MachineType, UserType, TransactionType, OverrideTransactionType } from "./types";
+import { BudgetType, BudgetRelationType, MachineType, UserType, TransactionType, OverrideTransactionType, MachineRelationType } from "./types";
 
 export const turnOnMachine = async () => {
     
@@ -215,7 +215,7 @@ export const getBudgetsFromUser = async (userID: number) => {
     }
 }
 
-export const createRelation = async (userID: number, budgetID: number) => {
+export const createBudgetRelation = async (userID: number, budgetID: number) => {
     try {
         const result = await fetch(`${API_URL}/users/budgets`,
             {
@@ -232,7 +232,7 @@ export const createRelation = async (userID: number, budgetID: number) => {
             throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
         }
 
-        const data: RelationType = await result.json();
+        const data: BudgetRelationType = await result.json();
         return data;
     } catch (err) { 
         throw err;
@@ -240,7 +240,7 @@ export const createRelation = async (userID: number, budgetID: number) => {
 }
 
 
-export const deleteRelation = async (userID: number, budgetID: number) => {
+export const deleteBudgetRelation = async (userID: number, budgetID: number) => {
     try {
         const result = await fetch(`${API_URL}/users/${userID}/budgets/${budgetID}`,
             {
@@ -253,7 +253,67 @@ export const deleteRelation = async (userID: number, budgetID: number) => {
             throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
         }
 
-        const data: RelationType = await result.json();
+        const data: BudgetRelationType = await result.json();
+        return data;
+    } catch (err) { 
+        throw err;
+    }
+}
+
+export const getMachinesFromUser = async (userID: number) => {
+
+    try {
+        const result = await fetch(`${API_URL}/users/${userID}/machines`);
+
+        if (!result.ok) {
+            throw new Error("Error");
+        }
+
+        const data: MachineType[] = await result.json();
+        return data;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const createMachineRelation = async (userID: number, machineId: number) => {
+    try {
+        const result = await fetch(`${API_URL}/users/machines`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ userId: userID, machineId }) 
+            }
+        );
+
+        if (!result.ok) {
+            const data: { error: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
+        }
+
+        const data: MachineRelationType = await result.json();
+        return data;
+    } catch (err) { 
+        throw err;
+    }
+}
+
+export const deleteMachineRelation = async (userID: number, machineId: number) => {
+    try {
+        const result = await fetch(`${API_URL}/users/${userID}/machines/${machineId}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        if (!result.ok) {
+            const data: { error: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
+        }
+
+        const data: MachineRelationType = await result.json();
         return data;
     } catch (err) { 
         throw err;
@@ -284,7 +344,6 @@ export const addMachineToDB = async (name: string, rate: number) => {
     
     try {
 
-        console.log(rate);
         const result = await fetch(`${API_URL}/machines`,
             {
                 method: "POST",
@@ -308,6 +367,23 @@ export const addMachineToDB = async (name: string, rate: number) => {
     } catch (err) {
         throw err;
     }
+}
+
+export const getMachineByName = async (name: string) => {
+    try {
+        const result = await fetch(`${API_URL}/machines/${name}`)
+
+        if (!result.ok) {
+            const data: { error: string } = await result.json();
+            throw new Error(JSON.stringify(data));
+        }
+
+        const data: MachineType = await result.json();
+
+        return data;
+    } catch (err) {
+        throw err;
+    }    
 }
 
 export const removeMachineByName = async (name: string) => {

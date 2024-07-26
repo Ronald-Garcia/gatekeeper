@@ -3,7 +3,6 @@ export interface UserType {
     firstname: string,
     lastname: string,
     banned: number,
-    machinePerm: number,
     admin: number,
     jhed: string
 }
@@ -27,10 +26,16 @@ export interface MachineType {
     rate: number,
 }
 
-export interface RelationType {
+export interface BudgetRelationType {
     id?: number,
     jid: number,
     budgetId: number
+}
+
+export interface MachineRelationType {
+    id?: number,
+    jid: number,
+    machineId: number
 }
 
 export interface TransactionType {

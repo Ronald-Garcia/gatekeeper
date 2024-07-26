@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { createRelation, deleteRelation, updateUserToDB } from "@/data/api";
-import { $newRelationList, $newUser, $relationsToDelete, invalidNewUser } from "@/lib/store";
+import { createBudgetRelation, createMachineRelation, deleteBudgetRelation, deleteMachineRelation, updateUserToDB } from "@/data/api";
+import { $newBudgetRelationList, $newUser, $budgetRelationsToDelete, invalidNewUser, $machineRelationsToDelete, $newMachineRelationList } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 
 
@@ -11,8 +11,10 @@ const UpdateStudentConfirmation = () => {
     const { toast } = useToast();
 
     const newUser = useStore($newUser);
-    const newRelations = useStore($newRelationList);
-    const relationsToDelete = useStore($relationsToDelete);
+    const newBudgetRelations = useStore($newBudgetRelationList);
+    const newMachineRelations = useStore($newMachineRelationList);
+    const budgetRelationsToDelete = useStore($budgetRelationsToDelete);
+    const machineRelationsToDelete = useStore($machineRelationsToDelete);
 
     const onSubmitClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         try {
@@ -32,8 +34,10 @@ const UpdateStudentConfirmation = () => {
     const onYesClick = async () => {
         try {
             await updateUserToDB(newUser);
-            newRelations.forEach(async r => await createRelation(r.jid, r.budgetId));
-            relationsToDelete.forEach(async r => await deleteRelation(r.jid, r.budgetId));
+            newBudgetRelations.forEach(async r => await createBudgetRelation(r.jid, r.budgetId));
+            budgetRelationsToDelete.forEach(async r => await deleteBudgetRelation(r.jid, r.budgetId));
+            newMachineRelations.forEach(async r => await createMachineRelation(r.jid, r.machineId));
+            machineRelationsToDelete.forEach(async r => await deleteMachineRelation(r.jid, r.machineId));
 
             toast({
                 variant: "default",

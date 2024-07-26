@@ -22,10 +22,6 @@ const SelectBudget = () => {
         resetNewBudget();
     }, [])
 
-    useEffect(()=> {
-        console.log(budgetAdded);
-    }, [budgetAdded]);
-
     return (
         <>
             <Card className="w-[90%]">

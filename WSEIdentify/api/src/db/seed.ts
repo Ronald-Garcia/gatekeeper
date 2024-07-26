@@ -47,7 +47,6 @@ async function seed() {
       jid: 6010675004172191,
       firstname: "Ronald",
       lastname: "Garcia",
-      machinePerm: 0b1011,
       banned: 0,
       admin: 1,
       jhed: "rgarci47"
@@ -60,7 +59,6 @@ async function seed() {
         jid: 9383737,
         firstname: "Bob",
         lastname: "Bob",
-        machinePerm: 0b0000,
         banned: 1,
         admin: 0,
         jhed: "bbob22"
@@ -73,7 +71,6 @@ async function seed() {
         jid: 76525252,
         firstname: "Stacy",
         lastname: "Macy",
-        machinePerm: 0b0111,
         banned: 0,
         admin: 1,
         jhed: "smacy29"
@@ -84,28 +81,28 @@ async function seed() {
     const [machine1] = await db
       .insert(machinesAvailable)
       .values({
-        name: "Mill 1",
+        name: "Mill1",
         rate: 35
       }).returning( {name: machinesAvailable.name});
 
       const [machine2] = await db
       .insert(machinesAvailable)
       .values({
-        name: "Mill 2",
+        name: "Mill2",
         rate: 35
       }).returning( {name: machinesAvailable.name});
 
       const [machine3] = await db
       .insert(machinesAvailable)
       .values({
-        name: "Lathe 1",
+        name: "Lathe1",
         rate: 35
       }).returning( {name: machinesAvailable.name});
 
       const [machine4] = await db
       .insert(machinesAvailable)
       .values({
-        name: "Lathe 2",
+        name: "Lathe2",
         rate: 35
       }).returning( {name: machinesAvailable.name});
 

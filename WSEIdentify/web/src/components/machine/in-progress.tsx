@@ -5,7 +5,8 @@ import { $currentUser, $newBudget, PAGES, setCurrentPage } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "../ui/use-toast";
-import { addTransactionToDB } from "@/data/api";
+import { addTransactionToDB, getMachineByName } from "@/data/api";
+import { MACHINE_NAME } from "@/env";
 
 const InProgress = () => {
 
@@ -15,7 +16,7 @@ const InProgress = () => {
 
     const [time, setTime] = useState<number>(0);
     const { toast } = useToast();
-
+    let MACHINE_ID = -1;
     useEffect(() => {
         const interval = setInterval(()=> {
             setTime(time => time + 1000);
@@ -24,13 +25,16 @@ const InProgress = () => {
             clearInterval(interval)
         };
     }, []);
-
+    useEffect(()=> {
+        getMachineByName(MACHINE_NAME).then(m => MACHINE_ID = m.id);
+    }, [MACHINE_NAME])
     const onSubmit = async () => {
         try {
+            console.log(MACHINE_ID);
             await addTransactionToDB({
                 timeSpent: time,
                 code: newBudget.id,
-                machineUsed: 1,
+                machineUsed: MACHINE_ID,
                 userJHED: currentUser.jhed
             });
             

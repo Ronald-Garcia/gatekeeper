@@ -21,6 +21,7 @@ Set up the .env (see .env.example) with the URL's of the server being hosted on.
 ```env
 VITE_API_URL = {API_URL_LINK}
 VITE_BASE_URL = {APPLICATION_URL_LINK}
+VITE_MACHINE_ID = {the current machine id}
 ```
 
 

@@ -6,6 +6,8 @@ import { useStore } from "@nanostores/react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "../ui/use-toast";
 import { OverrideTransactionType } from "@/data/types";
+import { MACHINE_NAME } from "@/env";
+import { getMachineByName } from "@/data/api";
 
 
 
@@ -15,7 +17,7 @@ const InProgress = () => {
 
     const [time, setTime] = useState(0);
     const { toast } = useToast();
-
+    let MACHINE_ID = -1;
     useEffect(() => {
         const interval = setInterval(()=> {
             setTime(time => time + 1000);
@@ -25,11 +27,16 @@ const InProgress = () => {
         };
     }, []);
 
+    useEffect(()=> {
+        getMachineByName(MACHINE_NAME).then(m => MACHINE_ID = m.id);
+    }, [MACHINE_NAME])
+
     const onSubmit = async () => {
         try {
+            console.log(MACHINE_ID);
             const override_transaction: OverrideTransactionType = { 
                 timeSpent: time,
-                machineUsed: 1,
+                machineUsed: MACHINE_ID,
                 userJid,
                 date: new Date()
             };

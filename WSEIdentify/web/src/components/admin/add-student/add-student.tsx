@@ -9,7 +9,7 @@ import { BudgetType, MachineType } from "@/data/types";
 import { ToggleGroup, ToggleGroupItem } from "../../ui/toggle-group";
 import { Separator } from "../../ui/separator";
 import { ChangeEvent } from "react";
-import { $newUser, toggleRelation, PAGES, setCurrentPage, setNewUserAdmin, setNewUserFirstName, setNewUserLastName, setNewUserMachinePerms, resetRelations, setNewUserJHED } from "@/lib/store";
+import { $newUser, toggleBudgetRelation, PAGES, setCurrentPage, setNewUserAdmin, setNewUserFirstName, setNewUserLastName, resetBudgetRelations, setNewUserJHED, toggleMachineRelation, resetMachineRelations } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "../../ui/button";
 import AddStudentConfirmation from "./add-student-confirmation";
@@ -85,7 +85,8 @@ const AddStudent = () => {
     useEffect(()=> {
         renderAllAvailableMachines();
         renderAllBudgets();
-        resetRelations();
+        resetBudgetRelations();
+        resetMachineRelations();
     }, []);
 
     return (
@@ -145,7 +146,7 @@ const AddStudent = () => {
                                 Admin?
                             </label>
                         </div>
-                        {allAvalableMachines.map((machine, i)=> {
+                        {allAvalableMachines.map((machine)=> {
                                 return (
                                     <div key={`div for ${machine.name}`} className="flex items-center space-x-2">
                                         <Checkbox 
@@ -153,7 +154,7 @@ const AddStudent = () => {
                                         id={machine.name} 
                                         className="transition-all"
                                         onCheckedChange={() => {
-                                            setNewUserMachinePerms(newUser.machinePerm ^ (1 << i));
+                                            toggleMachineRelation( { jid: newUser.jid, machineId: machine.id })
                                         }}> </Checkbox>
                                     <label
                                 key={`label for ${machine.name}`}
@@ -181,7 +182,7 @@ const AddStudent = () => {
                                     key={budget.alias} 
                                     value={budget.alias}
                                     onClick={() => {
-                                        toggleRelation( { jid: newUser.jid, budgetId: budget.id } );
+                                        toggleBudgetRelation( { jid: newUser.jid, budgetId: budget.id } );
                                     }}>
                                     {budget.alias}
                                 </ToggleGroupItem>        

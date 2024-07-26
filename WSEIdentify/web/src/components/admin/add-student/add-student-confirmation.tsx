@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { addUserToDB, createRelation } from "@/data/api";
-import { $newRelationList, $newUser, invalidNewUser } from "@/lib/store";
+import { addUserToDB, createBudgetRelation, createMachineRelation } from "@/data/api";
+import { $newBudgetRelationList, $newMachineRelationList, $newUser, invalidNewUser } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 
 
@@ -11,7 +11,8 @@ const AddStudentConfirmation = () => {
     const { toast } = useToast();
 
     const newUser = useStore($newUser);
-    const newRelations = useStore($newRelationList);
+    const newBudgetRelations = useStore($newBudgetRelationList);
+    const newMachineRelations = useStore($newMachineRelationList);
 
     const onSubmitClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         try {
@@ -31,7 +32,8 @@ const AddStudentConfirmation = () => {
     const onYesClick = async () => {
         try {
             await addUserToDB(newUser);
-            newRelations.forEach(async r => await createRelation(r.jid, r.budgetId));
+            newBudgetRelations.forEach(async r => await createBudgetRelation(r.jid, r.budgetId));
+            newMachineRelations.forEach(async r => await createMachineRelation(r.jid, r.machineId));
             toast({
                 variant: "default",
                 description: `${newUser.firstname} was successfully added.`,
