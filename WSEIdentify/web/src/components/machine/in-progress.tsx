@@ -15,8 +15,8 @@ const InProgress = () => {
     const currentUser = useStore($currentUser);
 
     const [time, setTime] = useState<number>(0);
+    const [machineId, setMachineId] = useState(-1);
     const { toast } = useToast();
-    let MACHINE_ID = -1;
     useEffect(() => {
         const interval = setInterval(()=> {
             setTime(time => time + 1000);
@@ -26,15 +26,17 @@ const InProgress = () => {
         };
     }, []);
     useEffect(()=> {
-        getMachineByName(MACHINE_NAME).then(m => MACHINE_ID = m.id);
+        getMachineByName(MACHINE_NAME).then(m => {
+            console.log(m);
+            setMachineId(m.id)
+        });
     }, [MACHINE_NAME])
     const onSubmit = async () => {
         try {
-            console.log(MACHINE_ID);
             await addTransactionToDB({
                 timeSpent: time,
                 code: newBudget.id,
-                machineUsed: MACHINE_ID,
+                machineUsed: machineId,
                 userJHED: currentUser.jhed
             });
             

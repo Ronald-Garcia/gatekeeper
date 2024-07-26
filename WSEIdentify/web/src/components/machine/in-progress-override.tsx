@@ -16,8 +16,8 @@ const InProgress = () => {
     const userJid = useStore($userJID);
 
     const [time, setTime] = useState(0);
+    const [machineId, setMachineId] = useState(0);
     const { toast } = useToast();
-    let MACHINE_ID = -1;
     useEffect(() => {
         const interval = setInterval(()=> {
             setTime(time => time + 1000);
@@ -28,15 +28,14 @@ const InProgress = () => {
     }, []);
 
     useEffect(()=> {
-        getMachineByName(MACHINE_NAME).then(m => MACHINE_ID = m.id);
+        getMachineByName(MACHINE_NAME).then(m => setMachineId(m.id));
     }, [MACHINE_NAME])
 
     const onSubmit = async () => {
         try {
-            console.log(MACHINE_ID);
             const override_transaction: OverrideTransactionType = { 
                 timeSpent: time,
-                machineUsed: MACHINE_ID,
+                machineUsed: machineId,
                 userJid,
                 date: new Date()
             };

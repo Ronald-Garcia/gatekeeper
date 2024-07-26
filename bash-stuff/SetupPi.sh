@@ -35,9 +35,13 @@ git clone https://github.com/Ronald-Garcia/gatekeeper.git
 cd gatekeeper/WSEIdentify/web && pnpm install
 pnpm dev
 
+cd ~ 
+
 echo "Configuring UART port"
 gpio mode 15 ALT5
 gpio mode 16 ALT5
+
+
 cd /boot
 sudo echo "\nenable_uart=1\n" >> config.txt
 
