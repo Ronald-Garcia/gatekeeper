@@ -40,7 +40,7 @@ const SwipeDialog = () => {
                 throw new Error("Error! User not found!");
             }
             setUser(user);   
-            if (user.admin) {
+            if (user.admin && MACHINE_NAME === "Kiosk") {
                 toast({
                     title: "Admin detected.",
                     description: "Would you like to open the admin page?",
