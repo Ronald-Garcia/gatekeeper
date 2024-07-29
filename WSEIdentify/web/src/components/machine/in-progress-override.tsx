@@ -34,7 +34,7 @@ const InProgress = () => {
     const onSubmit = async () => {
         try {
             const override_transaction: OverrideTransactionType = { 
-                moneySpent: time,
+                timeSpent: time,
                 machineUsed: machineId,
                 userJid,
                 date: new Date()
