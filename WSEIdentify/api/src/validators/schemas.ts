@@ -72,8 +72,9 @@ export const updateMachineRelationSchema = createMachineRelationSchema.partial()
  */
 
 export const createTransactionSchema = z.object({
-    timeSpent: z.coerce.number(),
+    moneySpent: z.coerce.number(),
     code: z.coerce.number().int().positive(),
+    budgetName: z.string(),
     machineUsed: z.coerce.number().int().positive(),
     userJHED: z.string(),
 });

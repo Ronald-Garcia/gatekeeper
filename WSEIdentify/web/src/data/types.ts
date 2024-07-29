@@ -39,8 +39,9 @@ export interface MachineRelationType {
 }
 
 export interface TransactionType {
-    timeSpent: number,
+    moneySpent: number,
     code: number,
+    budgetName: string,
     machineUsed: number,
     userJHED: string
 }

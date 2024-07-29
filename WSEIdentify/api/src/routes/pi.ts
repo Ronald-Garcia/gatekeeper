@@ -47,42 +47,5 @@ piRoutes.get("/lock",
           message: stringResult.split(":")[1]
       })
   });
-  
-
-/*
- *********************
- * DELETE OPERATIONS * 
- ********************* 
- */
-piRoutes.delete("/machines/:name",
-  zValidator("param", getMachineByNameSchema),
-  async (c) => {
-    const { name } = c.req.valid("param");
-    const [ deletedMachine ] = await db.delete(machinesAvailable).where(eq(machinesAvailable.name, name)).returning();
-
-    if (!deletedMachine) {
-      throw new HTTPException(404, { message: "Machine not found."} );
-    }
-
-    return c.json(deletedMachine);
-  }
-)
-
-/*
- *******************
- * POST OPERATIONS * 
- ******************* 
- */
-piRoutes.post("/machines",
-  zValidator("json", createMachineSchema),
-  async (c) => {
-    const body = c.req.valid("json");
-
-    const [ newMachine ] = await db.insert(machinesAvailable).values(body).returning();
-
-    return c.json(newMachine);
-  }
-);
-
 
 export default piRoutes;

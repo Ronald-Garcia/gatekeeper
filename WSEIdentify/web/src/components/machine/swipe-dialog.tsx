@@ -40,28 +40,30 @@ const SwipeDialog = () => {
                 throw new Error("Error! User not found!");
             }
             setUser(user);   
-            if (user.admin && MACHINE_NAME === "Kiosk") {
-                toast({
-                    title: "Admin detected.",
-                    description: "Would you like to open the admin page?",
-                    action: (
-                        <ToastAction altText="Confirm" onClick={()=> {setCurrentPage(PAGES.ADMIN_START)}}>Yes!</ToastAction>
-                    )
-                })
+            if (MACHINE_NAME === "Kiosk") {
+                if (!user.admin) {
+                    toast({
+                        variant: "destructive",
+                        title: "Uh oh! Something went wrong! 😔",
+                        description: "User is not an admin, please use the machines!",
+                    })
+                } else {
+                    setCurrentPage(PAGES.ADMIN_START)
+                }
             } else {
                 const userMachines = await getMachinesFromUser(user.jid);
-                console.log(MACHINE_NAME);
     
                 const hasAccess = userMachines.some(m => m.name === MACHINE_NAME);
     
                 if (!hasAccess) {
                     throw new Error("It appears you do not have permission to access this machine. Receive training or contact admins to update permissions!")
                 }    
+
+                setCurrentPage(PAGES.BUDGET);
             }
             
             
 
-            setCurrentPage(PAGES.BUDGET);
         } catch (err) {
             if ((err as Error).message === "Failed to fetch") {
                 toast({

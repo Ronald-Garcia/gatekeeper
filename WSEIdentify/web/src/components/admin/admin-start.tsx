@@ -6,6 +6,7 @@ import { $currentUser, PAGES, setCurrentPage } from "@/lib/store";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import MachineActions from "./machine-actions";
 import { Button } from "../ui/button";
+import TransactionActions from "./transaction-actions";
 
 const AdminStart = () => {
     const curAdmin = useStore($currentUser)
@@ -25,6 +26,7 @@ const AdminStart = () => {
                     <StudentActons></StudentActons>
                     <BudgetActions></BudgetActions>
                     <MachineActions></MachineActions>
+                    <TransactionActions></TransactionActions>
                 </div>
             </CardContent>
             <CardFooter>

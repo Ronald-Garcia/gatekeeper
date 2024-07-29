@@ -435,3 +435,17 @@ export const addAllOverrideTransactions = async (transactions: OverrideTransacti
         throw err;
     }
 }
+
+export const sendTransactionReport = async (email: string) => {
+
+    const result = await fetch(`${API_URL}/reports/${email}`);
+
+    if (!result.ok) {
+        const data: { error: string } = await result.json();
+        throw new Error(JSON.stringify(data));
+    }
+
+    const data: { success: boolean, message: string } = await result.json();
+    
+    return data.success
+}

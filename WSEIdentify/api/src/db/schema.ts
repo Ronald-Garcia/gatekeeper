@@ -29,10 +29,11 @@ export const users = sqliteTable("users", {
  */
 export const transactions = sqliteTable("transactions", {
     id: integer("id").primaryKey({ autoIncrement: true}),
-    timeSpent: integer("timeSpent").notNull(),
-    code: integer("budgetCode").references(() => budgetCodes.id),
+    moneySpent: integer("moneySpent").notNull(),
+    code: integer("budgetCode").references(() => budgetCodes.id, { onDelete: "no action"}),
+    budgetName: text("budgetAlias").references(() => budgetCodes.alias, { onDelete: "no action"}),
     machineUsed: integer("machine").references(()=>machinesAvailable.id, { onDelete: "no action" }),
-    userJHED: text("userJHED").references(() => users.jhed),
+    userJHED: text("userJHED").references(() => users.jhed, { onDelete: "no action"}),
     date: integer("dateAdded", { mode: "timestamp"}).notNull(),
 });
 
@@ -65,7 +66,7 @@ export const overrideTransactions = sqliteTable("override_transactions", {
  */
 export const budgetCodes = sqliteTable("budgetCodes", {
     id: integer("budgetCode").primaryKey({ autoIncrement: true }),
-    alias: text("alias"),
+    alias: text("alias").unique(),
     isSeniorDesign: integer("isSeniorDesign").default(0),
     isLab: integer("isLab").default(0),
     isClass: integer("isClass").default(1)

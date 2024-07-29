@@ -1,17 +1,18 @@
 import { db, connection } from "./index";
-import { users, machinesAvailable, budgetCodes, userBudgetRelation, transactions, overrideTransactions } from "./schema";
+import { users, machinesAvailable, budgetCodes, userBudgetRelation, transactions, overrideTransactions, userMachineRelation } from "./schema";
 
 async function seed() {
   console.log("Seeding the database...");
 
   // Clean the tables
   console.log("Cleaning existing data...");
-  await db.delete(users);
-  await db.delete(machinesAvailable);
-  await db.delete(budgetCodes);
-  await db.delete(userBudgetRelation);
   await db.delete(transactions);
   await db.delete(overrideTransactions);
+  await db.delete(users);
+  await db.delete(budgetCodes);
+  await db.delete(machinesAvailable);
+  await db.delete(userBudgetRelation);
+  await db.delete(userMachineRelation);
 
   
   console.log("Inserting new seed data...");

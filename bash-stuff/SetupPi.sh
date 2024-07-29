@@ -45,7 +45,4 @@ gpio mode 16 ALT5
 cd /boot
 sudo echo "\nenable_uart=1\n" >> config.txt
 
-# i dont know what this is about
-echo "Now execute sudo nano /boot/cmdline.txt and remove all references to serial0 (i.e. console=serial0,115200)\n"
-echo "Then reboot and run 'gpio readall'. Ensure that TxD and RxD pins are set to ALT5 and NOT to IN"
-echo "If they have reset themselves, run sudo raspi-config and select interface options. Select Serial and disable the login shell but enable the serial hardware. Reboot."
+chromium-browser -kiosk "http://localhost:5173"
