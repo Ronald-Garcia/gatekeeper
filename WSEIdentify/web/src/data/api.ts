@@ -436,9 +436,9 @@ export const addAllOverrideTransactions = async (transactions: OverrideTransacti
     }
 }
 
-export const sendTransactionReport = async (email: string) => {
+export const sendTransactionReport = async (machineName: string, email: string) => {
 
-    const result = await fetch(`${API_URL}/reports/${email}`);
+    const result = await fetch(`${API_URL}/reports/${machineName}/${email}`);
 
     if (!result.ok) {
         const data: { error: string } = await result.json();

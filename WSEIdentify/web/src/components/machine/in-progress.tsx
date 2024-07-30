@@ -29,6 +29,7 @@ const InProgress = () => {
     useEffect(()=> {
         getMachineByName(MACHINE_NAME).then(m => {
             setMachineId(m.id)
+            console.log(m.id);
             setMachineRate(m.rate)
         });
     }, [MACHINE_NAME])

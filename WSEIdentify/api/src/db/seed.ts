@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import { db, connection } from "./index";
 import { users, machinesAvailable, budgetCodes, userBudgetRelation, transactions, overrideTransactions, userMachineRelation } from "./schema";
 
@@ -14,7 +15,10 @@ async function seed() {
   await db.delete(userBudgetRelation);
   await db.delete(userMachineRelation);
 
-  
+  await db.run(
+    sql`DELETE FROM sqlite_sequence WHERE name IN ('userMachineRelation', 'userBudgetRelation', 'machines', 'transactions', 'override_transactions')`,
+  );
+
   console.log("Inserting new seed data...");
   const [budget1] = await db
       .insert(budgetCodes)

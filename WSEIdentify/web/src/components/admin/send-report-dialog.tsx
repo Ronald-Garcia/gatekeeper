@@ -9,9 +9,13 @@ const SendReportDialog = () => {
 
     const submitButton = useRef<HTMLButtonElement>(null);
     const [ email, setEmail] = useState("");
-
+    const [ machineName, setMachineName] = useState("");
     const updateEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
+    }
+
+    const updateMachineName = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setMachineName(e.target.value);
     }
 
     const onEnterSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -25,9 +29,9 @@ const SendReportDialog = () => {
 
     const onSubmitClick = async () => {
         try {
-            const res = await sendTransactionReport(email);
+            const res = await sendTransactionReport(machineName, email);
             if (!res) {
-                throw new Error();
+                throw new Error("The email was not properly sent. Make sure this is a gmail!");
             }
             toast({
                 title: "Email sent successfully!",
@@ -38,7 +42,7 @@ const SendReportDialog = () => {
             toast({
                 variant: "destructive",
                 title: "Uh oh! Something went wrong! 😔",
-                description: "The email was not properly sent. Make sure this is a gmail!"
+                description: (err as Error).message
             })
         }
 
@@ -63,6 +67,12 @@ const SendReportDialog = () => {
 
                 <Input
                     onChange={updateEmail}
+                    placeholder="Enter the Gmail"
+                    onKeyDown={onEnterSubmit}>
+                </Input>
+                <Input
+                    placeholder="Enter the machine name"
+                    onChange={updateMachineName}
                     onKeyDown={onEnterSubmit}>
                 </Input>
 

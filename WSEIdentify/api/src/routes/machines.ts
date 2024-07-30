@@ -33,7 +33,8 @@ machineRoutes.get("/machines",
 machineRoutes.get("/machines/:name",
   zValidator("param", getMachineByNameSchema),
   async (c) => {
-    const machine = await db.select().from(machinesAvailable).get();
+    const { name } = c.req.valid("param");
+    const machine = await db.select().from(machinesAvailable).where(eq(machinesAvailable.name, name)).get();
     return c.json(machine);  
 });
 

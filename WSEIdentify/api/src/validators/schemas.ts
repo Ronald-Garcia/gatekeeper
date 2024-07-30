@@ -81,7 +81,7 @@ export const createTransactionSchema = z.object({
 
 export const createOverrideTransactionSchema = z.object({
     timeSpent: z.coerce.number(),
-    machineUsed: z.coerce.number().int().positive(),
+    machineUsed: z.string(),
     userJid: z.coerce.number(),
     date: z.coerce.date(),
 });

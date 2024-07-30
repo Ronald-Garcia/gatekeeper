@@ -13,20 +13,26 @@ import sys
 # Create your connection.
 cnx = sqlite3.connect('C:/Users/rgarc/OneDrive/Desktop/gatekeeper/WSEIdentify/api/sqlite.db')
 emailTo = 'rgarcia0303757@gmail.com'
-if len(sys.argv) == 2:
+machineName = "Mill1"
+if len(sys.argv) == 3:
     emailTo = sys.argv[1]
-overrideTransactions = pd.read_sql_query("SELECT * FROM override_transactions", cnx)
-transactions = pd.read_sql_query("SELECT * FROM transactions", cnx)
+    machineName = sys.argv[2]
+
+machine = pd.read_sql_query("SELECT * FROM machines WHERE name='" + machineName + "'", cnx)
+machineId = machine['id'][0]
+
+overrideTransactions = pd.read_sql_query("SELECT * FROM override_transactions WHERE machine='"+machineName+"'", cnx)
+transactions = pd.read_sql_query("SELECT * FROM transactions WHERE machine="+str(machineId), cnx)
 
 transactions["Receiver Type"] =  [ "CC" if len(str(c)) == 10 else "IO" for c in transactions["budgetCode"] ]
-
 overrideTransactions["dateAdded"] = [ str(datetime.fromtimestamp(d)) for d in overrideTransactions["dateAdded"] ]
-
 transactions["dateAdded"] = [ str(datetime.fromtimestamp(d)) for d in transactions["dateAdded"] ]
-
 
 transactions["Text"] =  [ ", ".join(a) for a in zip(transactions["userJHED"], transactions["budgetAlias"], transactions["dateAdded"]) ]
 overrideTransactions["Text"] =  [ ", ".join(a) for a in zip(overrideTransactions["userJid"], overrideTransactions["dateAdded"]) ]
+
+transactions = transactions.reindex(["moneySpent", "Receiver Type", "budgetCode", "Text", "dateAdded"], axis=1)
+overrideTransactions = overrideTransactions.reindex(["moneySpent", "Receiver Type", "budgetCode", "Text", "dateAdded"], axis=1)
 
 transactions.to_excel("report.xlsx")
 overrideTransactions.to_excel("override-report.xlsx")
@@ -41,13 +47,13 @@ def send_mail(send_from,send_to,subject,text,files,server,port,username='',passw
     part1 = MIMEBase('application', "octet-stream")
     part1.set_payload(open(files[0], "rb").read())
     encoders.encode_base64(part1)
-    part1.add_header('Content-Disposition', 'attachment', filename="transaction-report.xlsx")
+    part1.add_header('Content-Disposition', 'attachment', filename="transaction-report-" + machineName + ".xlsx")
     msg.attach(part1)
 
     part2 = MIMEBase('application', "octet-stream")
     part2.set_payload(open(files[1], "rb").read())
     encoders.encode_base64(part2)
-    part2.add_header('Content-Disposition', 'attachment', filename="override-transaction-report.xlsx")
+    part2.add_header('Content-Disposition', 'attachment', filename="override-transaction-report-" + machineName + ".xlsx")
     msg.attach(part2)
     #context = ssl.SSLContext(ssl.PROTOCOL_SSLv3)
     #SSL connection only working on Python 3+

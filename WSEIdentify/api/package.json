@@ -1,6 +1,7 @@
 {
   "name": "gatekeeper-api",
   "scripts": {
+    "start": "tsx src/server.ts",
     "dev": "tsx watch src/server.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",

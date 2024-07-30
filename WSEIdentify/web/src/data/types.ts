@@ -48,7 +48,7 @@ export interface TransactionType {
 
 export interface OverrideTransactionType {
     timeSpent: number,
-    machineUsed: number,
+    machineUsed: string,
     userJid: number,
     date: Date,
 }

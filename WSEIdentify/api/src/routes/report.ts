@@ -25,10 +25,11 @@ const reportRoutes = new Hono();
  * @param email the email to send
  * @returns true if successful.
  */
-reportRoutes.get("/reports/:email",
+reportRoutes.get("/reports/:machineName/:email",
   async (c) => {
+    const machineName = c.req.param("machineName");
     const email = c.req.param("email");
-    const success = await execSync(`python ./email-operations/report.py ${email}`)
+    const success = await execSync(`python ./email-operations/report.py ${email} ${machineName}`)
     console.log(success.toString());
     const stringResult = success.toString().trim();
     return await c.json({

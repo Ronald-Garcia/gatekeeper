@@ -43,13 +43,13 @@ export const transactions = sqliteTable("transactions", {
  * @primary id the id of the transaction.
  * @column timeSpent the time spent.
  * @foreign machineUsed the machine that was used.
- * @foreign userJid the JID of the account that made the transaction.
+ * @column userJid the JID of the account that made the transaction.
  * @column date the date the transaction was made.
  */
 export const overrideTransactions = sqliteTable("override_transactions", {
     id: integer("id").primaryKey({ autoIncrement: true}),
     timeSpent: integer("timeSpent").notNull(),
-    machineUsed: integer("machine").references(()=>machinesAvailable.id, { onDelete: "no action" }),
+    machineUsed: text("machine").references(()=>machinesAvailable.name, { onDelete: "no action" }),
     userJid: integer("userJid").notNull(),
     date: integer("dateAdded", { mode: "timestamp"}).notNull(),
 });
