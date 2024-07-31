@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "../ui/use-toast";
 import { OverrideTransactionType } from "@/data/types";
 import { MACHINE_NAME } from "@/env";
+import { execSync } from "child_process";
 
 
 
@@ -35,6 +36,19 @@ const InProgress = () => {
             };
 
             addOverride(override_transaction);
+
+            const success = await execSync("python ./pi-operations/lock.py")
+            const stringResult = success.toString().trim();
+            if (stringResult.startsWith("e")) {
+                throw new Error("Could not turn off the machine! Please contact an admin to turn it off.");
+            }
+            
+            setCurrentPage(PAGES.IP)    
+            
+            toast({
+                title: "Session finished!",
+                description: "The session was successfully finished, billing information was sent!"
+            });
 
             toast({
                 title: "Session finished!",

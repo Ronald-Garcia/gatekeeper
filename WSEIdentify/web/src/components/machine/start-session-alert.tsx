@@ -2,6 +2,7 @@ import { PAGES, setCurrentPage } from "@/lib/store";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "../ui/use-toast";
+import { execSync } from "child_process";
 
 type StartSessionAlertProps = {
     disabled: boolean,
@@ -12,13 +13,27 @@ const StartSessionAlert = ({ disabled, budgetAdded }: StartSessionAlertProps) =>
 
     const { toast } = useToast();
 
-    const onSubmit = () => {
-        if (budgetAdded) {
-            setCurrentPage(PAGES.IP)
-        } else {
+    const onSubmit = async () => {
+        if (!budgetAdded) {
             toast({
                 variant: "destructive",
                 description: "No budget was selected! Please select a budget.",
+                title: "Uh oh! Something went wrong! 😔"
+            })
+            return;
+        }
+        try {
+            const success = await execSync("python ./pi-operations/unlock.py")
+            const stringResult = success.toString().trim();
+            if (stringResult.startsWith("e")) {
+                throw new Error("Could not turn on the machines!");
+            }
+            
+            setCurrentPage(PAGES.IP)    
+        } catch (err) {
+            toast({
+                variant: "destructive",
+                description: (err as Error).message,
                 title: "Uh oh! Something went wrong! 😔"
             })
         }
