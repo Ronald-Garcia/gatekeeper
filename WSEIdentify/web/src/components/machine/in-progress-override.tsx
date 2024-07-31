@@ -39,6 +39,7 @@ const InProgress = () => {
 
             const success = await execSync("python ./pi-operations/lock.py")
             const stringResult = success.toString().trim();
+            console.log(stringResult);
             if (stringResult.startsWith("e")) {
                 throw new Error("Could not turn off the machine! Please contact an admin to turn it off.");
             }
