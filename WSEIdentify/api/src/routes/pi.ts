@@ -28,6 +28,7 @@ piRoutes.get("/unlock",
   async (c) => {
     const success = await execSync("python ./pi-operations/unlock.py")
     const stringResult = success.toString().trim();
+    console.log(stringResult)
     return await c.json({
         success: stringResult.startsWith('s'),
         message: stringResult.split(":")[1]
@@ -42,6 +43,7 @@ piRoutes.get("/lock",
     async (c) => {
       const success = await execSync("python ./pi-operations/lock.py")
       const stringResult = success.toString().trim();
+      console.log(stringResult)
       return await c.json({
           success: stringResult.startsWith('s'),
           message: stringResult.split(":")[1]
