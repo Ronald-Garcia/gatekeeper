@@ -16,6 +16,7 @@ const piRoutes = new Hono();
 
 const controller = new AbortController();
 const { signal } = controller
+let locked = true;
 /*
  ****************** 
  * GET OPERATIONS *
@@ -28,7 +29,11 @@ const { signal } = controller
  */
 piRoutes.get("/unlock",
   async (c) => {
+    if (!locked) {
+      throw new HTTPException(400, { message: "Trying to unlock an unlock!"})
+    }
     controller.abort()
+    locked = !locked;
     exec("python pi-operations/unlock.py", { signal }, (error) => {
       if(error) {
         console.error(error);
@@ -49,7 +54,11 @@ piRoutes.get("/unlock",
  */
 piRoutes.get("/lock",
     async (c) => {
+    if (locked) {
+      throw new HTTPException(400, { message: "Trying to lock a lock!"})
+    } 
     controller.abort()
+    locked = !locked;
     exec("python pi-operations/lock.py", { signal }, (error) => {
       if(error) {
         console.error(error);
