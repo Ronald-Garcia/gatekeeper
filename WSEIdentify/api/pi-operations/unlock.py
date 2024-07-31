@@ -4,6 +4,7 @@ import random
 
 contactorButton = gpiozero.Button(4, pull_up=True)
 contactorLED = gpiozero.LED(21)
+print("What")
 contactorLED.on()
 
 print(contactorButton)
@@ -19,9 +20,6 @@ try:
     contactorLED.close()
     time.sleep(1)
     contactorButton = gpiozero.Button(4, pull_up=False) # pin 7
-    contactorButton.when_released=self.updateLastActiveTime
-    contactorButton.when_pressed=self.updateBecameActiveTime
-            
     contactorLED = gpiozero.LED(21) # pin 40
     contactorLED.on()
     print("s:Contactor is activated!")
