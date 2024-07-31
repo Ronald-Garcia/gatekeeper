@@ -2,7 +2,7 @@ import gpiozero
 import time
 import random
 
-contactorButton = gpiozero.Button(4, pull_down=False)
+contactorButton = gpiozero.Button(4, pull_up=True)
 contactorLED = gpiozero.LED(21)
 
 print(contactorButton)
