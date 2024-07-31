@@ -34,7 +34,9 @@ piRoutes.get("/unlock",
     if (!locked) {
       throw new HTTPException(400, { message: "Trying to unlock an unlock!"})
     }
-    unlock_child.kill()
+    if (lock_child) {
+      lock_child.kill()
+    }
     locked = !locked;
     unlock_child = exec("python pi-operations/unlock.py", { signal }, (error) => {
       if(error) {
@@ -59,7 +61,9 @@ piRoutes.get("/lock",
     if (locked) {
       throw new HTTPException(400, { message: "Trying to lock a lock!"})
     } 
-    unlock_child.kill()
+    if (unlock_child) {
+      unlock_child.kill()
+    }
     locked = !locked;
     lock_child = exec("python pi-operations/lock.py", { signal }, (error) => {
       if(error) {
