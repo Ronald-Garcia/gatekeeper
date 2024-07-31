@@ -14,6 +14,8 @@ import { exec, execSync, spawnSync } from "child_process";
 
 const piRoutes = new Hono();
 
+const controller = new AbortController();
+const { signal } = controller
 /*
  ****************** 
  * GET OPERATIONS *
@@ -26,7 +28,8 @@ const piRoutes = new Hono();
  */
 piRoutes.get("/unlock",
   async (c) => {
-    exec("python pi-operations/unlock.py")
+    controller.abort()
+    exec("python pi-operations/unlock.py", { signal })
     // const stringResult = success.toString().trim();
     // console.log(stringResult)
     return await c.json({
@@ -41,7 +44,8 @@ piRoutes.get("/unlock",
  */
 piRoutes.get("/lock",
     async (c) => {
-    exec("python pi-operations/lock.py")
+    controller.abort()
+    exec("python pi-operations/lock.py", { signal })
     // const stringResult = success.toString().trim();
     // console.log(stringResult)
     return await c.json({
