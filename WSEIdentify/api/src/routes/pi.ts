@@ -26,7 +26,7 @@ const piRoutes = new Hono();
  */
 piRoutes.get("/unlock",
   async (c) => {
-    const success = await execSync("python ./pi-operations/unlock.py")
+    const success = await execSync("python pi-operations/unlock.py")
     const stringResult = success.toString().trim();
     console.log(stringResult)
     return await c.json({
@@ -41,7 +41,7 @@ piRoutes.get("/unlock",
  */
 piRoutes.get("/lock",
     async (c) => {
-      const success = await execSync("python ./pi-operations/lock.py")
+      const success = await execSync("python pi-operations/lock.py")
     const stringResult = success.toString().trim();
     console.log(stringResult)
     return await c.json({
