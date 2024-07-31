@@ -58,6 +58,18 @@ async function seed() {
     })
     .returning({ id: users.jid });
 
+    const [test] = await db
+    .insert(users)
+    .values({
+      jid: 1,
+      firstname: "Test",
+      lastname: "Test",
+      banned: 0,
+      admin: 1,
+      jhed: "ttest01"
+    })
+    .returning({ id: users.jid });
+
   const [user2] = await db
     .insert(users)
     .values({
@@ -88,28 +100,28 @@ async function seed() {
       .values({
         name: "Mill1",
         rate: 35
-      }).returning( {name: machinesAvailable.name});
+      }).returning();
 
       const [machine2] = await db
       .insert(machinesAvailable)
       .values({
         name: "Mill2",
         rate: 35
-      }).returning( {name: machinesAvailable.name});
+      }).returning();
 
       const [machine3] = await db
       .insert(machinesAvailable)
       .values({
         name: "Lathe1",
         rate: 35
-      }).returning( {name: machinesAvailable.name});
+      }).returning();
 
       const [machine4] = await db
       .insert(machinesAvailable)
       .values({
         name: "Lathe2",
         rate: 35
-      }).returning( {name: machinesAvailable.name});
+      }).returning();
 
       const [link1] = await db
       .insert(userBudgetRelation)
@@ -147,7 +159,38 @@ async function seed() {
       }).returning();
 
       console.log("Seeding completed successfully.");
+
+      
+      await db
+      .insert(userMachineRelation)
+      .values({
+        userId: test.id,
+        machineId: machine1.id
+      });
+      
+await db
+.insert(userMachineRelation)
+.values({
+  userId: test.id,
+  machineId: machine2.id
+});
+
+await db
+.insert(userMachineRelation)
+.values({
+  userId: test.id,
+  machineId: machine3.id
+});
+
+await db
+.insert(userMachineRelation)
+.values({
+  userId: test.id,
+  machineId: machine4.id
+});
+
 }
+
 
 seed()
   .catch((e) => {
