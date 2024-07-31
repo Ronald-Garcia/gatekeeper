@@ -42,12 +42,12 @@ piRoutes.get("/unlock",
 piRoutes.get("/lock",
     async (c) => {
       const success = await execSync("python ./pi-operations/lock.py")
-      const stringResult = success.toString().trim();
-      console.log(stringResult)
-      return await c.json({
-          success: stringResult.startsWith('s'),
-          message: stringResult.split(":")[1]
-      })
+    const stringResult = success.toString().trim();
+    console.log(stringResult)
+    return await c.json({
+        success: stringResult.startsWith('s'),
+        message: stringResult.split(":")[1]
+    })
   });
 
 export default piRoutes;

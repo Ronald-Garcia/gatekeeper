@@ -2,7 +2,7 @@ import { PAGES, setCurrentPage } from "@/lib/store";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "../ui/use-toast";
-import { execSync } from "child_process";
+import { unlockMachine } from "@/data/api";
 
 type StartSessionAlertProps = {
     disabled: boolean,
@@ -23,11 +23,12 @@ const StartSessionAlert = ({ disabled, budgetAdded }: StartSessionAlertProps) =>
             return;
         }
         try {
-            const success = await execSync("python ./pi-operations/unlock.py")
-            const stringResult = success.toString().trim();
-            if (stringResult.startsWith("e")) {
-                throw new Error("Could not turn on the machines!");
+            const data = await unlockMachine();
+            console.log(data);
+            if (data.message.startsWith("e")) {
+                throw new Error("Could not lock machine! Please see staff to turn off machine.")
             }
+
             
             setCurrentPage(PAGES.IP)    
         } catch (err) {

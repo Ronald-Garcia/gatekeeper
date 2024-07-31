@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "../ui/use-toast";
 import { OverrideTransactionType } from "@/data/types";
 import { MACHINE_NAME } from "@/env";
-import { execSync } from "child_process";
+import { lockMachine } from "@/data/api";
 
 
 
@@ -37,11 +37,10 @@ const InProgress = () => {
 
             addOverride(override_transaction);
 
-            const success = await execSync("python ./pi-operations/lock.py")
-            const stringResult = success.toString().trim();
-            console.log(stringResult);
-            if (stringResult.startsWith("e")) {
-                throw new Error("Could not turn off the machine! Please contact an admin to turn it off.");
+            const data = await lockMachine();
+            console.log(data);
+            if (data.message.startsWith("e")) {
+                throw new Error("Could not lock machine! Please see staff to turn off machine.")
             }
             
             setCurrentPage(PAGES.IP)    

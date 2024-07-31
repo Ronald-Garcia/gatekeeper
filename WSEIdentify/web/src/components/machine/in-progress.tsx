@@ -5,9 +5,8 @@ import { $currentUser, $newBudget, PAGES, setCurrentPage } from "@/lib/store";
 import { useStore } from "@nanostores/react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "../ui/use-toast";
-import { addTransactionToDB, getMachineByName } from "@/data/api";
+import { addTransactionToDB, getMachineByName, lockMachine } from "@/data/api";
 import { MACHINE_NAME } from "@/env";
-import { execSync } from "child_process";
 
 const InProgress = () => {
 
@@ -44,10 +43,10 @@ const InProgress = () => {
                 userJHED: currentUser.jhed
             });
 
-            const success = await execSync("python ./pi-operations/lock.py")
-            const stringResult = success.toString().trim();
-            if (stringResult.startsWith("e")) {
-                throw new Error("Could not turn off the machine! Please contact an admin to turn it off.");
+            const data = await lockMachine();
+            console.log(data);
+            if (data.message.startsWith("e")) {
+                throw new Error("Could not lock machine! Please see staff to turn off machine.")
             }
             
             setCurrentPage(PAGES.IP)    

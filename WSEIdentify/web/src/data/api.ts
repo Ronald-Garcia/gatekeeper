@@ -449,3 +449,30 @@ export const sendTransactionReport = async (machineName: string, email: string) 
     
     return data.success
 }
+
+export const lockMachine = async () => {
+    const result = await fetch(`http://localhost:3000/lock`);
+
+    if (!result.ok) {
+        const data: { error: string } = await result.json();
+        throw new Error(JSON.stringify(data));
+    }
+
+    const data: { success: boolean, message: string } = await result.json();
+
+    return data;
+}
+
+
+export const unlockMachine = async () => {
+    const result = await fetch(`http://localhost:3000/unlock`);
+
+    if (!result.ok) {
+        const data: { error: string } = await result.json();
+        throw new Error(JSON.stringify(data));
+    }
+
+    const data: { success: boolean, message: string } = await result.json();
+
+    return data;
+}
