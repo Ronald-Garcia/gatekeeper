@@ -1,6 +1,7 @@
 import gpiozero
 import time
 import random
+from signal import pause
 
 contactorButton = gpiozero.Button(4, pull_up=True)
 contactorLED = gpiozero.LED(21)
@@ -28,3 +29,5 @@ except Exception as e:
 
 
 
+
+pause()
