@@ -30,7 +30,10 @@ piRoutes.get("/unlock",
   async (c) => {
     controller.abort()
     exec("python pi-operations/unlock.py", { signal }, (error) => {
-      console.log("Aborted");
+      if(error) {
+        console.error(error);
+        console.log("Aborted");
+      }
     })
     // const stringResult = success.toString().trim();
     // console.log(stringResult)
@@ -48,7 +51,10 @@ piRoutes.get("/lock",
     async (c) => {
     controller.abort()
     exec("python pi-operations/lock.py", { signal }, (error) => {
-      console.log("Aborted");
+      if(error) {
+        console.error(error);
+        console.log("Aborted");
+      }
     })
     // const stringResult = success.toString().trim();
     // console.log(stringResult)
