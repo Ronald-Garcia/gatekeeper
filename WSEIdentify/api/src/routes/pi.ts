@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { createMachineSchema, getMachineByNameSchema } from "../validators/schemas";
 import { HTTPException } from "hono/http-exception";
-import { exec, execSync, spawnSync } from "child_process";
+import { ChildProcess, exec, execSync, spawnSync } from "child_process";
 /*
  **********************************
  * ROUTE TO HANDLE PI OPERATIONS. *
@@ -17,6 +17,8 @@ const piRoutes = new Hono();
 const controller = new AbortController();
 const { signal } = controller
 let locked = true;
+let lock_child: ChildProcess;
+let unlock_child: ChildProcess;
 /*
  ****************** 
  * GET OPERATIONS *
@@ -32,9 +34,9 @@ piRoutes.get("/unlock",
     if (!locked) {
       throw new HTTPException(400, { message: "Trying to unlock an unlock!"})
     }
-    controller.abort()
+    unlock_child.kill()
     locked = !locked;
-    exec("python pi-operations/unlock.py", { signal }, (error) => {
+    unlock_child = exec("python pi-operations/unlock.py", { signal }, (error) => {
       if(error) {
         console.error(error);
         console.log("Aborted");
@@ -57,9 +59,9 @@ piRoutes.get("/lock",
     if (locked) {
       throw new HTTPException(400, { message: "Trying to lock a lock!"})
     } 
-    controller.abort()
+    unlock_child.kill()
     locked = !locked;
-    exec("python pi-operations/lock.py", { signal }, (error) => {
+    lock_child = exec("python pi-operations/lock.py", { signal }, (error) => {
       if(error) {
         console.error(error);
         console.log("Aborted");
