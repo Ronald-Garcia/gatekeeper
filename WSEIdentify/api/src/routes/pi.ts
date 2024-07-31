@@ -29,7 +29,9 @@ const { signal } = controller
 piRoutes.get("/unlock",
   async (c) => {
     controller.abort()
-    exec("python pi-operations/unlock.py", { signal })
+    exec("python pi-operations/unlock.py", { signal }, (error) => {
+      console.log("Aborted");
+    })
     // const stringResult = success.toString().trim();
     // console.log(stringResult)
     return await c.json({
@@ -45,7 +47,9 @@ piRoutes.get("/unlock",
 piRoutes.get("/lock",
     async (c) => {
     controller.abort()
-    exec("python pi-operations/lock.py", { signal })
+    exec("python pi-operations/lock.py", { signal }, (error) => {
+      console.log("Aborted");
+    })
     // const stringResult = success.toString().trim();
     // console.log(stringResult)
     return await c.json({
