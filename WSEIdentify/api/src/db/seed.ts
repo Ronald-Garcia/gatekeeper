@@ -130,6 +130,13 @@ async function seed() {
         budgetId: budget2.id
       }).returning();
 
+      const [link] = await db
+      .insert(userBudgetRelation)
+      .values({
+        userId: test.id,
+        budgetId: budget2.id
+      }).returning();
+
       const [link2] = await db
       .insert(userBudgetRelation)
       .values({
