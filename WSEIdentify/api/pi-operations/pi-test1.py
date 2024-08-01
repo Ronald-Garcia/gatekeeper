@@ -1,6 +1,6 @@
-from gpiozero import LED
+import gpiozero
 
-led = LED(21)
+led = gpiozero.LED(21)
 
 while True:
     if led.is_lit:
