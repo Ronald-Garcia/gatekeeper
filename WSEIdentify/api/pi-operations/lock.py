@@ -3,9 +3,8 @@ import time
 import random
 from signal import pause
 
-contactorButton = gpiozero.LED(21, pull_up=True)
+contactorLED = gpiozero.LED(21)
 
-print(contactorButton)
 print(contactorLED)
 try:
    contactorLED.off()
