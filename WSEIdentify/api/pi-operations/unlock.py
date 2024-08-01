@@ -26,8 +26,3 @@ try:
     print("s:Contactor is activated!")
 except Exception as e:
     print("e:Could not turn on contactor.")
-
-
-
-
-pause()
