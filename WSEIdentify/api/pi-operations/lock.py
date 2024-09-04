@@ -8,3 +8,5 @@ contactorLED = gpiozero.LED(21)
 contactorLED.on()
 time.sleep(0.1)
 contactorLED.off()
+
+print("s:Success!")
