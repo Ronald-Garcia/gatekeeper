@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'api/**'
+      - 'WSEIdentify/api/**'
       - '.github/workflows/api.container.yml'
   workflow_dispatch:
 
@@ -27,15 +27,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.1.6
         with:
-          sparse-checkout: "api"
+          sparse-checkout: "WSEIdentify/api"
           sparse-checkout-cone-mode: false
 
       - name: Move files in the "api" folder to the root
         run: |
           ls -lah
           shopt -s dotglob
-          mv api/* .
-          rm -rf api
+          mv WSEIdentify/api/* .
+          rm -rf WSEIdentify/api
           ls -lah
 
       - name: Login to GitHub Container Registry

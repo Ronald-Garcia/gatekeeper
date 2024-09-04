@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'web/**'
+      - 'WSEIdentify/web/**'
       - '.github/workflows/web.container.yml'
   workflow_dispatch:
 
@@ -27,15 +27,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.1.6
         with:
-          sparse-checkout: "web"
+          sparse-checkout: "WSEIdentify/web"
           sparse-checkout-cone-mode: false
 
       - name: Move files in the "web" folder to the root
         run: |
           ls -lah
           shopt -s dotglob
-          mv web/* .
-          rm -rf web
+          mv WSEIdentify/web/* .
+          rm -rf WSEIdentify/web
           ls -lah
 
       - name: Login to GitHub Container Registry
