@@ -45,7 +45,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: downcase REPO
+        run: |
+          echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
       - name: Build the docker image
         run: |
-          docker build . --tag ghcr.io/${{ github.repository }}-api:latest
-          docker push ghcr.io/${{ github.repository }}-api:latest
+          docker build . --tag ghcr.io/${{ env.REPO }}-api:latest
+          docker push ghcr.io/${{ env.REPO }}-api:latest
