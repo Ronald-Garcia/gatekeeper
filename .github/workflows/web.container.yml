@@ -44,8 +44,10 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
+      - name: downcase REPO
+        run: |
+          echo "REPO=${github.repository,,}" >>${GITHUB_ENV}
       - name: Build the docker image
         run: |
-          docker build . --tag ghcr.io/${{ github.repository }}-web:latest
-          docker push ghcr.io/${{ github.repository }}-web:latest
+          docker build . --tag ghcr.io/${{ env.GITHUB_ENV }}-web:latest
+          docker push ghcr.io/${{ env.GITHUB_ENV }}-web:latest
