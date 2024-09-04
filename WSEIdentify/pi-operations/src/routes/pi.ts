@@ -38,7 +38,7 @@ piRoutes.get("/unlock",
       lock_child.kill()
     }
     locked = !locked;
-    unlock_child = exec("python pi-operations/unlock.py", { signal }, (error) => {
+    unlock_child = exec("python unlock.py", { signal }, (error) => {
       if(error) {
         console.error(error);
         console.log("Aborted");
@@ -65,7 +65,7 @@ piRoutes.get("/lock",
       unlock_child.kill()
     }
     locked = !locked;
-    lock_child = exec("python pi-operations/lock.py", { signal }, (error) => {
+    lock_child = exec("python lock.py", { signal }, (error) => {
       if(error) {
         console.error(error);
         console.log("Aborted");

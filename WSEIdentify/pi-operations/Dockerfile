@@ -14,8 +14,6 @@ RUN pnpm install
 
 COPY . .
 
-ARG DB_FILE=/app/data/sqlite.db
-ENV DB_FILE=${DB_FILE}
 RUN pnpm db:generate
 RUN pnpm db:migrate
 

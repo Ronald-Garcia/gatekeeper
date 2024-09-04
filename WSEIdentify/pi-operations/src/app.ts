@@ -7,6 +7,7 @@ import { HTTPException } from 'hono/http-exception';
 import { cors } from 'hono/cors';
 import transactionRoutes from './routes/transactions';
 import overrideTransactionRoutes from './routes/override-transactions';
+import piRoutes from './routes/pi';
 import machineRelationRoutes from './routes/user-machine-relations';
 import reportRoutes from './routes/report';
 const app = new Hono()
@@ -19,14 +20,7 @@ app.get('/', (c) => {
 })
 
 // added routes
-app.route("/", userRoutes);
-app.route("/", machineRoutes);
-app.route("/", budgetRoutes);
-app.route("/", budgetRelationRoutes);
-app.route("/", machineRelationRoutes);
-app.route("/", transactionRoutes);
-app.route("/", overrideTransactionRoutes);
-app.route("/", reportRoutes);
+app.route("/", piRoutes);
 
 // error handling
 app.onError((err, c) => {
