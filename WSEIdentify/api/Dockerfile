@@ -1,12 +1,26 @@
 FROM node:lts-alpine
 
-USER node
-WORKDIR /home/node
+WORKDIR /app
+
+RUN apk add --no-cache curl
+
+RUN mkdir -p /app/data
+
+COPY package.json pnpm-lock.yaml ./
+
+RUN npm install -g pnpm
+
+RUN pnpm install
 
 COPY . .
-RUN npm ci
 
-ARG PORT
-EXPOSE ${PORT:-3000}
+ARG DB_FILE=/app/data/sqlite.db
+ENV DB_FILE=${DB_FILE}
+RUN pnpm db:generate
+RUN pnpm db:migrate
 
-CMD ["npm", "run", "start"]
+ARG PORT=3000
+ENV PORT=${PORT}
+EXPOSE ${PORT}
+
+CMD ["pnpm", "run", "start"]

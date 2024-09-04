@@ -18,6 +18,4 @@ Dockerfile
 *.md
 LICENSE
 
-*.db
-
 node_modules/
