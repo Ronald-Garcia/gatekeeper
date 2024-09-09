@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  web:
+    image: ghcr.io/ronald-garcia/gatekeeper-web:latest
+    ports:
+      - "8080:80"
+  pi:
+    image: ghcr.io/ronald-garcia/gatekeeper-pi-operations:latest
+    ports:
+      - "3000:3000"
+volumes:
+  api-data:
