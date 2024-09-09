@@ -1,12 +1,12 @@
-name: Build and push the API container image
+name: Build and push the PI Operations container image
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'WSEIdentify/api/**'
-      - '.github/workflows/api.container.yml'
+      - 'WSEIdentify/pi-operations/**'
+      - '.github/workflows/pi.container.yml'
   workflow_dispatch:
 
 permissions:
@@ -16,7 +16,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "API Container"
+  group: "PI Container"
   cancel-in-progress: true
 
 jobs:
@@ -27,15 +27,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.1.6
         with:
-          sparse-checkout: "WSEIdentify/api"
+          sparse-checkout: "WSEIdentify/pi-operations"
           sparse-checkout-cone-mode: false
 
-      - name: Move files in the "api" folder to the root
+      - name: Move files in the "pi-operations" folder to the root
         run: |
           ls -lah
           shopt -s dotglob
-          mv WSEIdentify/api/* .
-          rm -rf WSEIdentify/api
+          mv WSEIdentify/pi-operations/* .
+          rm -rf WSEIdentify/pi-operations
           ls -lah
 
       - name: Login to GitHub Container Registry
@@ -50,5 +50,5 @@ jobs:
           echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
       - name: Build the docker image
         run: |
-          docker build . --tag ghcr.io/${{ env.REPO }}-api:latest
-          docker push ghcr.io/${{ env.REPO }}-api:latest
+          docker build . --tag ghcr.io/${{ env.REPO }}-pi-operations:latest
+          docker push ghcr.io/${{ env.REPO }}-pi-operations:latest
