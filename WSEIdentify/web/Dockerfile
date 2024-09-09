@@ -10,7 +10,7 @@ RUN pnpm install
 
 COPY . .
 
-ARG VITE_API_URL=http://localhost:3000
+ARG VITE_API_URL=https://gatekeeper-api-latest.onrender.com/
 ENV VITE_API_URL=${VITE_API_URL}
 
 RUN pnpm run build
