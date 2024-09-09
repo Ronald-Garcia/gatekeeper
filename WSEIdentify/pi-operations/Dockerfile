@@ -14,9 +14,6 @@ RUN pnpm install
 
 COPY . .
 
-RUN pnpm db:generate
-RUN pnpm db:migrate
-
 ARG PORT=3000
 ENV PORT=${PORT}
 EXPOSE ${PORT}
