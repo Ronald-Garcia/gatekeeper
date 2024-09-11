@@ -1,4 +1,4 @@
-FROM arm64v8/node:lts-alpine
+FROM alpine
 
 WORKDIR /app
 

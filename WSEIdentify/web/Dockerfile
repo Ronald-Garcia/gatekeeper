@@ -1,4 +1,4 @@
-FROM arm64v8/node:latest AS build
+FROM alpine AS build
 
 WORKDIR /app
 
