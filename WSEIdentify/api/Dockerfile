@@ -25,8 +25,10 @@ COPY . .
 # Build the database
 ARG DB_FILE=/app/data/sqlite.db
 ENV DB_FILE=${DB_FILE}
+
 RUN pnpm db:generate
 RUN pnpm db:migrate
+RUN pnpm db:seed
 # We don't seed the database in production!
  
 # Expose the port the app runs on
