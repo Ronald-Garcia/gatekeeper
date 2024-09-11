@@ -1,13 +1,37 @@
 version: '3.8'
 
 services:
+
+  api:
+    image: ghcr.io/ronald-garcia/gatekeeper-api:latest
+    volumes:
+      - api-data:/app/data
+    environment:
+      - DB_FILE=/app/data/sqlite.db
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
   web:
     image: ghcr.io/ronald-garcia/gatekeeper-web:latest
     ports:
       - "8080:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    
   pi:
     image: ghcr.io/ronald-garcia/gatekeeper-pi-operations:latest
     ports:
       - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
 volumes:
   api-data:
