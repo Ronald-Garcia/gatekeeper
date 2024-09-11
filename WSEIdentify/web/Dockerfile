@@ -1,4 +1,4 @@
-FROM node:arm64v8 AS build
+FROM arm64v8/node:latest AS build
 
 WORKDIR /app
 
