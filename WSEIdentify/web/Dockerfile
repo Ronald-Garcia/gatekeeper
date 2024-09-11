@@ -1,4 +1,4 @@
-FROM ubuntu AS build
+FROM node:arm64v8 AS build
 
 WORKDIR /app
 

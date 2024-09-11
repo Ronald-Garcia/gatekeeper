@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM node:lts-alpine
 
 WORKDIR /app
 
