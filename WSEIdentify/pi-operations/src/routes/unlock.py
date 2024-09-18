@@ -7,9 +7,9 @@ if gpiozero:
     print("there is GPIOZERO")
 
 try:
-    contactorLED = gpiozero.LED(21)
+    contactorLED = gpiozero.LED(6)
     while True:
-        contactorLED.value = 0
+        contactorLED.off()
 
     print("s:Success!")
 except:
