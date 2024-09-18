@@ -37,12 +37,14 @@ piRoutes.get("/unlock",
       lock_child.kill()
     }
     locked = !locked;
-    unlock_child = exec("python ./src/routes/unlock.py", { signal }, (error) => {
+    unlock_child = exec("python ./src/routes/unlock.py", { signal },  (error, stdout) => {
+      console.log(stdout.toString().trim());
       if(error) {
         console.error(error);
         console.log("Aborted");
       }
     })
+
     // const stringResult = success.toString().trim();
     // console.log(stringResult)
     return await c.json({
@@ -64,7 +66,8 @@ piRoutes.get("/lock",
       unlock_child.kill()
     }
     locked = !locked;
-    lock_child = exec("python ./src/routes/lock.py", { signal }, (error) => {
+    lock_child = exec("python ./src/routes/lock.py", { signal }, (error, stdout) => {
+      console.log(stdout.toString().trim());
       if(error) {
         console.error(error);
         console.log("Aborted");

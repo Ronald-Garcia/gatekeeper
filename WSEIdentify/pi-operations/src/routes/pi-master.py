@@ -5,6 +5,7 @@ detectionLed = gpiozero.LED(26)
 
 keep_active = False
 pulse_started = False
+print("Script Started")
 
 while True:
     if detectionLed.is_lit:
