@@ -1,6 +1,5 @@
 import { Hono } from "hono";
 import { db } from "../db";
-import { machinesAvailable } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { createMachineSchema, getMachineByNameSchema } from "../validators/schemas";
