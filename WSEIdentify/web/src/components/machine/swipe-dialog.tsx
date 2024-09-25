@@ -70,7 +70,7 @@ const SwipeDialog = () => {
                     variant: "destructive",
                     description: "There seems to be a server issue, so I am unable to confirm your identity. Would you like to enter override mode? Your JID will still be stored.",
                     title: "No wifi detected! 😔",
-                    action: <ToastAction altText="Override" onClick={() => {
+                    action: <ToastAction altText="Override" onClick={async () => {
                         try {
                             await unlockMachine();
                             setCurrentPage(PAGES.IPO)
