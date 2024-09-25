@@ -12,7 +12,7 @@ import { $overrideTransaction, $userJID, emptyOverride, PAGES, setCurrentPage, s
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 import { useStore } from "@nanostores/react";
-import { addAllOverrideTransactions, getMachinesFromUser, getUserByJID } from "@/data/api"; 
+import { addAllOverrideTransactions, getMachinesFromUser, getUserByJID, unlockMachine } from "@/data/api"; 
 import { setUser } from "@/lib/store";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
@@ -70,7 +70,14 @@ const SwipeDialog = () => {
                     variant: "destructive",
                     description: "There seems to be a server issue, so I am unable to confirm your identity. Would you like to enter override mode? Your JID will still be stored.",
                     title: "No wifi detected! 😔",
-                    action: <ToastAction altText="Override" onClick={() => {setCurrentPage(PAGES.IPO)}}>Yes!</ToastAction>
+                    action: <ToastAction altText="Override" onClick={() => {
+                        try {
+                            await unlockMachine();
+                            setCurrentPage(PAGES.IPO)
+                        } catch (err) {
+                            console.log(err);
+                        }
+                    }}>Yes!</ToastAction>
                 });
             } else {
                 toast({
