@@ -5,20 +5,26 @@ import { Input } from "../../ui/input";
 import { ChangeEvent, useState } from "react";
 import { useToast } from "../../ui/use-toast";
 import { useRef } from "react";
-import { removeUserByJID } from "@/data/api";
+import { removeUserByJHED, removeUserByJID } from "@/data/api";
 import { useStore } from "@nanostores/react";
-import { $userJID } from "@/lib/store";
+import { $currentUser, $userJID } from "@/lib/store";
 
 const RemoveStudent = () => {
 
+
     const userJID = useStore($userJID);
+    const user = useStore($currentUser);
 
     const [ tempJID, setTempJID ] = useState<string>("");
+    const [ tempJHED, setTempJHED ] = useState<string>("");
     const { toast } = useToast();
     const closeButton = useRef(null);
 
     const onChangeJID = (e: ChangeEvent<HTMLInputElement>) => {
         setTempJID(e.target.value);
+    }
+    const onChangeJHED = (e: ChangeEvent<HTMLInputElement>) => {
+        setTempJHED(e.target.value);
     }
 
     const onSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -52,6 +58,32 @@ const RemoveStudent = () => {
             })
         }
     }
+
+    
+    const onSubmitJHED = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+        try {
+            if (e.key === "Enter") {
+                const actualJHED = tempJHED;
+                    if (actualJHED === user.jhed) {
+                        throw new Error("You are trying to delete yourself... please use another account to do so.");
+                    }
+                    await removeUserByJHED(actualJHED);
+                    
+                (closeButton.current! as HTMLButtonElement).click();
+                toast({
+                    variant: "default",
+                    description: "User was successfully retrieved.",
+                    title: "Success! ✅"
+                })
+            }
+        } catch (err) {
+            toast({
+                variant: "destructive",
+                description: (err as Error).message,
+                title: "Uh oh! Something went wrong! 😔"
+            })
+        }
+    }
     return (
         <>
             <DialogContent>
@@ -60,7 +92,7 @@ const RemoveStudent = () => {
                         JID Detection
                     </DialogTitle>
                     <DialogDescription className="text-md italic">
-                        Please swipe the J-Card of the student to be removed.
+                        Please swipe the J-Card of the student to be removed, or type their JHED.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -68,6 +100,11 @@ const RemoveStudent = () => {
                 onKeyDown={onSubmit}>
 
                 </Input>
+
+                <Input onChange={onChangeJHED}
+                    onKeyDown={onSubmitJHED}
+                    placeholder={"JHED"}/>
+
                 <DialogFooter className="flex flex-row justify-end">
                 <DialogClose ref={closeButton} asChild>
                     <Button

@@ -3,7 +3,7 @@ import { db } from "../db";
 import { budgetCodes, userBudgetRelation, users } from "../db/schema";
 import { eq, or } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
-import { createUserSchema, updateUserSchema, getUserByJIDSchema, createBudgetSchema, getBudgetSchema } from "../validators/schemas";
+import { createUserSchema, updateUserSchema, getUserByJIDSchema, createBudgetSchema, getBudgetSchema, getUserByJHEDSchema } from "../validators/schemas";
 import { HTTPException } from "hono/http-exception";
 
 
@@ -42,6 +42,18 @@ userRoutes.get("/users/:jid",
   async (c) => {
     const { jid } = c.req.valid("param");
     const [ user ] = await db.select().from(users).where(eq(users.jid, jid)); 
+
+    if (!user) {
+      throw new HTTPException(404, { message: "User not found"}) // HTTP Status code 200 "Ok"
+    }
+    return c.json(user);
+});
+
+userRoutes.get("/users/jhed/:jhed", 
+  zValidator("param", getUserByJHEDSchema),
+  async (c) => {
+    const { jhed } = c.req.valid("param");
+    const [ user ] = await db.select().from(users).where(eq(users.jhed, jhed)); 
 
     if (!user) {
       throw new HTTPException(404, { message: "User not found"}) // HTTP Status code 200 "Ok"
@@ -96,6 +108,19 @@ userRoutes.delete("/users/:id",
       return c.json(deletedUser);  
 });
 
+
+userRoutes.get("/users/jhed/:jhed", 
+  zValidator("param", getUserByJHEDSchema),
+  async (c) => {
+    const { jhed } = c.req.valid("param");
+
+    const [ deletedUser ] = await db.delete(users).where(eq(users.jhed, jhed)).returning();
+
+    if (!deletedUser) {
+      throw new HTTPException(404, { message: "User not found"}) // HTTP Status code 200 "Ok"
+    }
+    return c.json(deletedUser);
+});
 
 /*
  ******************** 

@@ -21,6 +21,10 @@ export const getUserByJIDSchema = z.object({
     jid: z.coerce.number().int().nonnegative(),
 })
 
+export const getUserByJHEDSchema = z.object({
+    jhed: z.string(),
+})
+
 /*
  ******************
  * BUDGET SCHEMAS *

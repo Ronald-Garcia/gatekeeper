@@ -27,9 +27,50 @@ export const getUserByJID = async (userID: number) => {
     }
 }
 
+export const getUserByJHED = async (jhed: string) => {
+    try {
+        const result = await fetch(`${API_URL}/users/jhed/${jhed}`);
+
+        if (result.status === 500) {
+            throw new Error("Internal server error! Would you like to enable override?");
+        }
+        if (!result.ok) {
+            const data: { message: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
+        }
+
+        const data: UserType = await result.json();
+
+
+        return data;    
+    } catch (err) {
+        throw err;
+    }
+}
+
 export const removeUserByJID = async (userID: number) => {
     try {
         const result = await fetch(`${API_URL}/users/${userID}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        if (!result.ok) {
+            const data: { error: string } = await result.json();
+            throw new Error(`Something went wrong!: ${JSON.stringify(data)}`);
+        }
+        const data: UserType = await result.json();
+
+        return data;    
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const removeUserByJHED = async (jhed: string) => {
+    try {
+        const result = await fetch(`${API_URL}/users/jhed/${jhed}`,
             {
                 method: "DELETE"
             }
