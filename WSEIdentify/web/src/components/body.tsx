@@ -14,7 +14,7 @@ const Body = () => {
     const curPage = useStore($currentPage);
 
     return (
-        <div className="flex justify-center items-center w-full h-full overflow-hidden">
+        <div className="flex justify-center items-center w-full h-full overflow-auto">
             {(curPage === PAGES.START) && <StartMenu></StartMenu>}
             {(curPage === PAGES.BUDGET) && <SelectBudget></SelectBudget> }
             {(curPage === PAGES.IP) && <InProgress></InProgress>}

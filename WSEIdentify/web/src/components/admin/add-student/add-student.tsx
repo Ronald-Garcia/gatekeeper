@@ -13,6 +13,8 @@ import { $newUser, toggleBudgetRelation, PAGES, setCurrentPage, setNewUserAdmin,
 import { useStore } from "@nanostores/react";
 import { Button } from "../../ui/button";
 import AddStudentConfirmation from "./add-student-confirmation";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { ScrollBar } from "@/components/ui/scroll-area";
 
 const AddStudent = () => {
 
@@ -175,7 +177,7 @@ const AddStudent = () => {
                             Click on the budget(s) to add them to the student's account.
                         </p>
                     </div>
-                    <ToggleGroup type="multiple">
+                    <ToggleGroup className="flex flex-wrap max-w-96 mx-auto" type="multiple">
                         {allBudgets.map((budget)=> {
                             return (
                                 <ToggleGroupItem 
@@ -189,6 +191,7 @@ const AddStudent = () => {
                             );
                         })}
                     </ToggleGroup>
+
 
                 </CardContent>
                 <CardFooter className="flex flex-row justify-end space-x-3">
