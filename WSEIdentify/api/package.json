@@ -3,6 +3,7 @@
   "scripts": {
     "start": "tsx src/server.ts",
     "dev": "tsx watch src/server.ts",
+    "dep": "deno run --allow-net src/server.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
     "db:studio": "drizzle-kit studio",
@@ -13,7 +14,7 @@
     "@hono/node-server": "^1.12.0",
     "@hono/zod-validator": "^0.2.2",
     "better-sqlite3": "^11.1.2",
-    "drizzle-orm": "^0.31.2",
+    "drizzle-orm": "^0.36.0",
     "hono": "^4.4.12",
     "zod": "^3.23.8"
   },

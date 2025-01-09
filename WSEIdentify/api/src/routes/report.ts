@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { createMachineSchema, getMachineByNameSchema } from "../validators/schemas";
 import { HTTPException } from "hono/http-exception";
-import { exec, execSync, spawnSync } from "child_process";
+import { exec, execSync, spawnSync } from "node:child_process";
 /*
  **********************************
  * ROUTE TO HANDLE PI OPERATIONS. *
