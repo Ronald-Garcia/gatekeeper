@@ -1,4 +1,4 @@
-import { API_URL } from "@/env";
+import { API_URL, PI_URL } from "@/env";
 import { BudgetType, BudgetRelationType, MachineType, UserType, TransactionType, OverrideTransactionType, MachineRelationType } from "./types";
 
 export const turnOnMachine = async () => {
@@ -492,7 +492,7 @@ export const sendTransactionReport = async (machineName: string, email: string) 
 }
 
 export const lockMachine = async () => {
-    const result = await fetch(`http://localhost:3000/lock`);
+    const result = await fetch(`${PI_URL}/lock`);
 
     if (!result.ok) {
         const data: { error: string } = await result.json();
@@ -506,7 +506,7 @@ export const lockMachine = async () => {
 
 
 export const unlockMachine = async () => {
-    const result = await fetch(`http://localhost:3000/unlock`);
+    const result = await fetch(`${PI_URL}/unlock`);
 
     if (!result.ok) {
         const data: { error: string } = await result.json();
