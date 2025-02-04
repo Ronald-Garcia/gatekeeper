@@ -109,7 +109,7 @@ userRoutes.delete("/users/:id",
 });
 
 
-userRoutes.get("/users/jhed/:jhed", 
+userRoutes.delete("/users/jhed/:jhed", 
   zValidator("param", getUserByJHEDSchema),
   async (c) => {
     const { jhed } = c.req.valid("param");
