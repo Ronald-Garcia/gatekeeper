@@ -21,7 +21,7 @@ const AddStudent = () => {
     const newUser = useStore($newUser);
 
     const [ detectChange, setDetectChange ] = useState<boolean>(false);
-
+    const [ adminToggle, setAdminToggle ] = useState<number>(0);
     const { toast } = useToast();
     const [ allAvalableMachines, setAllAvailableMachines ] = useState<MachineType[]>([]);
     const [ allBudgets, setAllBudgets ] = useState<BudgetType[]>([]);
@@ -79,9 +79,8 @@ const AddStudent = () => {
             })
         }
     }
-    let adminToggle = 0;
     const onCheckedChangedAdmin = () => {
-        adminToggle ^= 1;
+        setAdminToggle(adminToggle ^ 1);
         setNewUserAdmin(adminToggle);
     }
     useEffect(()=> {
@@ -90,6 +89,10 @@ const AddStudent = () => {
         resetBudgetRelations();
         resetMachineRelations();
     }, []);
+
+    useEffect(() => {
+        console.log(adminToggle);
+    }, [adminToggle])
 
     return (
         <>

@@ -31,6 +31,7 @@ const AddStudentConfirmation = () => {
 
     const onYesClick = async () => {
         try {
+            console.log(newUser);
             await addUserToDB(newUser);
             newBudgetRelations.forEach(async r => await createBudgetRelation(r.jid, r.budgetId));
             newMachineRelations.forEach(async r => await createMachineRelation(r.jid, r.machineId));
