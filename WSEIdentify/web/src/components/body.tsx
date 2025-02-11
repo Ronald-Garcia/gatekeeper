@@ -1,6 +1,6 @@
 import { useStore } from "@nanostores/react";
 import StartMenu from "./machine/start-menu";
-import { $currentPage, PAGES } from "@/lib/store";
+import { $currentPage, clearNewUserJid, clearUser, PAGES } from "@/lib/store";
 import SelectBudget from "./machine/select-budget";
 import InProgress from "./machine/in-progress";
 import AdminStart from "./admin/admin-start";
@@ -8,10 +8,20 @@ import AddStudent from "./admin/add-student/add-student";
 import UpdateStudent from "./admin/update-student/update-student";
 import AddBudget from "./admin/add-budget-code/add-budget";
 import InProgressOverride from "./machine/in-progress-override";
+import { useEffect } from "react";
 
 
 const Body = () => {
+
     const curPage = useStore($currentPage);
+
+
+    useEffect(() => {
+        if (curPage === PAGES.START) {
+            clearUser();
+            clearNewUserJid();    
+        }
+    }, [curPage]);
 
     return (
         <div className="flex justify-center items-center w-full h-full overflow-auto">

@@ -35,6 +35,8 @@ const InProgress = () => {
     }, [MACHINE_NAME])
     const onSubmit = async () => {
         try {
+
+            
             await addTransactionToDB({
                 moneySpent: time * machineRate * 1 / 3600 / 10,
                 code: newBudget.id,

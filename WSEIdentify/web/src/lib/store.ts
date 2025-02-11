@@ -1,6 +1,7 @@
 
 import { BudgetType, MachineType, OverrideTransactionType, BudgetRelationType, UserType, MachineRelationType } from "@/data/types";
 import { atom } from "nanostores";
+import { logger } from "@nanostores/logger";
 
 export const PAGES = { 
     START: 0,
@@ -31,6 +32,15 @@ export const setUserJID = (newID: string) => {
     }
 }
 
+const emptyUser: UserType = {
+    jid: 0,
+    firstname: "",
+    lastname: "",
+    banned: 0,
+    admin: 0,
+    jhed: ""
+};
+
 export const $currentUser = atom<UserType>({
         jid: 0,
         firstname: "",
@@ -44,7 +54,9 @@ export const $currentUser = atom<UserType>({
 export const setUser = (newUser: UserType) => {
     $currentUser.set(newUser);
 }
-
+export const clearUser = () => {
+    $currentUser.set(emptyUser);
+}
 export const $budgetCodeUsed = atom<number>(0);
 
 export const setBudgetCodeUsed = (newBudgetCodeUsed: number) => {
@@ -60,6 +72,12 @@ export const $newUser = atom<UserType>({
     admin: 0,
     jhed: ""
 });
+
+const clearJID = -1;
+
+export const clearNewUserJid = () => {
+    $userJID.set(clearJID);
+}
 
 export const setNewUserJid = (jid: string) => {
     try {
@@ -258,3 +276,5 @@ export const addOverride = (t: OverrideTransactionType) => {
 export const emptyOverride = () => {
     $overrideTransaction.set([]);
 }
+
+logger({ $newUser, $userJID});

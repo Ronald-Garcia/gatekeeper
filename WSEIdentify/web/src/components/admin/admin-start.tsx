@@ -2,7 +2,7 @@ import BudgetActions from "./budget-actions";
 import StudentActons from "./student-actions";
 
 import { useStore } from "@nanostores/react";
-import { $currentUser, PAGES, setCurrentPage } from "@/lib/store";
+import { $currentUser, clearNewUserJid, clearUser, PAGES, setCurrentPage } from "@/lib/store";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import MachineActions from "./machine-actions";
 import { Button } from "../ui/button";
@@ -31,7 +31,11 @@ const AdminStart = () => {
             </CardContent>
             <CardFooter>
                 <Button
-                onClick={() => {setCurrentPage(PAGES.START)}}>
+                onClick={() => {
+                    setCurrentPage(PAGES.START)
+                    clearUser();
+                    clearNewUserJid();
+                    }}>
                     Go Back!
                 </Button>
             </CardFooter>
